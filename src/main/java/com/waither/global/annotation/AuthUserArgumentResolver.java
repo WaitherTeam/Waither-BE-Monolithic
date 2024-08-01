@@ -3,6 +3,7 @@ package com.waither.global.annotation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -25,8 +26,6 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) webRequest.getNativeRequest();
-
-        return httpServletRequest.getHeader("email");
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

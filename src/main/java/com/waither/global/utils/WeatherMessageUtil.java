@@ -1,10 +1,15 @@
 package com.waither.global.utils;
 
+import com.waither.domain.noti.entity.UserMedian;
+import com.waither.global.enums.Expressions;
+import com.waither.global.enums.Season;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.waither.global.enums.Expressions.*;
 
 
 @RequiredArgsConstructor
