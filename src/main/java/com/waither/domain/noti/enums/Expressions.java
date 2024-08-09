@@ -1,4 +1,4 @@
-package com.waither.global.enums;
+package com.waither.domain.noti.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

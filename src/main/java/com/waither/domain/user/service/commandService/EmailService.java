@@ -1,7 +1,7 @@
 package com.waither.domain.user.service.commandService;
 
-import com.waither.userservice.global.exception.CustomException;
-import com.waither.userservice.global.response.ErrorCode;
+import com.waither.global.exception.CustomException;
+import com.waither.global.response.UserErrorCode;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -41,7 +41,7 @@ public class EmailService {
 
             return message;
         } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new CustomException(ErrorCode.NO_SUCH_ALGORITHM);
+            throw new CustomException(UserErrorCode.NO_SUCH_ALGORITHM);
         }
     }
 
@@ -54,7 +54,7 @@ public class EmailService {
         } catch (RuntimeException e) {
             log.debug("MailService.sendEmail exception occur toEmail: {}, " + "title: {}, authcode: {}",
                     email, title, code);
-            throw new CustomException(ErrorCode.UNABLE_TO_SEND_EMAIL);
+            throw new CustomException(UserErrorCode.UNABLE_TO_SEND_EMAIL);
         }
     }
 

@@ -1,24 +1,21 @@
 package com.waither.domain.user.service.commandService;
 
-import com.waither.userservice.converter.RegionConverter;
-import com.waither.userservice.converter.SettingConverter;
-import com.waither.userservice.converter.SurveyConverter;
-import com.waither.userservice.converter.UserConverter;
-import com.waither.userservice.dto.converter.AccountConverter;
-import com.waither.userservice.dto.request.UserReqDto;
-import com.waither.userservice.dto.response.KakaoResDto;
-import com.waither.userservice.entity.*;
-import com.waither.userservice.entity.enums.Season;
-import com.waither.userservice.global.exception.CustomException;
-import com.waither.userservice.global.jwt.dto.JwtDto;
-import com.waither.userservice.global.jwt.userdetails.PrincipalDetails;
-import com.waither.userservice.global.jwt.util.JwtUtil;
-import com.waither.userservice.global.response.ErrorCode;
-import com.waither.userservice.global.util.RedisUtil;
-import com.waither.userservice.kafka.KafkaConverter;
-import com.waither.userservice.kafka.KafkaDto;
-import com.waither.userservice.kafka.KafkaService;
-import com.waither.userservice.repository.UserRepository;
+import com.waither.domain.user.converter.RegionConverter;
+import com.waither.domain.user.converter.SettingConverter;
+import com.waither.domain.user.converter.SurveyConverter;
+import com.waither.domain.user.converter.UserConverter;
+import com.waither.domain.user.dto.converter.AccountConverter;
+import com.waither.domain.user.dto.request.UserReqDto;
+import com.waither.domain.user.dto.response.KakaoResDto;
+import com.waither.domain.user.entity.*;
+import com.waither.domain.user.entity.enums.Season;
+import com.waither.domain.user.repository.UserRepository;
+import com.waither.global.exception.CustomException;
+import com.waither.global.jwt.dto.JwtDto;
+import com.waither.global.jwt.userdetails.PrincipalDetails;
+import com.waither.global.jwt.util.JwtUtil;
+import com.waither.global.response.UserErrorCode;
+import com.waither.global.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +44,6 @@ public class UserService {
     private static final String VERIFIED_PREFIX = "Verified_";
 
     private final EmailService emailService;
-    private final KafkaService kafkaService;
 
     private final RedisUtil redisUtil;
     private final JwtUtil jwtUtil;
@@ -89,9 +85,9 @@ public class UserService {
         newUser.setUserData(userDataList);
         newUser.setUserMedian(userMedianList);
 
-        // 초기값 Kafka 전송
-        KafkaDto.InitialDataDto initialDataDto = KafkaConverter.toInitialData(newUser, newSetting, userMedianList);
-        kafkaService.sendInitialData(initialDataDto);
+        // TODO: 초기값 Kafka 전송
+//        KafkaDto.InitialDataDto initialDataDto = KafkaConverter.toInitialData(newUser, newSetting, userMedianList);
+//        kafkaService.sendInitialData(initialDataDto);
         userRepository.save(newUser);
     }
 
@@ -151,7 +147,7 @@ public class UserService {
     private void checkDuplicatedEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
-            throw new CustomException(ErrorCode.USER_ALREADY_EXIST);
+            throw new CustomException(UserErrorCode.USER_ALREADY_EXIST);
         }
     }
     public boolean isUserRegistered(String email) {
@@ -163,7 +159,7 @@ public class UserService {
 
     public void checkUserExists(String email) {
         if (!userRepository.existsByEmail(email)) {
-            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+            throw new CustomException(UserErrorCode.USER_NOT_FOUND);
         }
     }
     // 인증 번호 생성하는 메서드
@@ -179,7 +175,7 @@ public class UserService {
             return builder.toString();
         } catch (NoSuchAlgorithmException e) {
             log.debug("MemberService.createCode() exception occur");
-            throw new CustomException(ErrorCode.NO_SUCH_ALGORITHM);
+            throw new CustomException(UserErrorCode.NO_SUCH_ALGORITHM);
         }
     }
     //랜덤함수로 임시비밀번호 구문 만들기
@@ -201,7 +197,7 @@ public class UserService {
 
         // 이메일 인증 요청하지 않았거나, 이메일 인증 요청한 후 유효기간 경과한 경우
         if (!(redisUtil.hasKey(AUTH_CODE_PREFIX + email))) {
-            throw new CustomException(ErrorCode.AUTH_CODE_EXPIRED);
+            throw new CustomException(UserErrorCode.AUTH_CODE_EXPIRED);
         }
         // 인증 번호 일치
         else if (redisUtil.get(AUTH_CODE_PREFIX + email).toString().equals(authCode)) {
@@ -211,7 +207,7 @@ public class UserService {
         }
         // 그 외의 경우, 코드 잘못됨.
         else {
-            throw new CustomException(ErrorCode.INVALID_CODE);
+            throw new CustomException(UserErrorCode.INVALID_CODE);
         }
     }
     // signup 과정 전에 인증된 email인지 확인하는 메서드
@@ -219,7 +215,7 @@ public class UserService {
     public boolean verifiedAccounts(String email) {
         // 인증하지 않았거나, 인증 완료까지는 했지만 너무 시간이 경과한 경우
         if(!redisUtil.hasKey(VERIFIED_PREFIX + email)) {
-            throw new CustomException(ErrorCode.AUTH_CODE_EXPIRED);
+            throw new CustomException(UserErrorCode.AUTH_CODE_EXPIRED);
         }
         // hasKey(VERIFIED_PREFIX + email) 만 통과 하면 -> 인증 완료한 것
         return true;
@@ -235,14 +231,14 @@ public class UserService {
     public void checkPassword(User user, String currentPassword) {
         // 현재 비밀번호가 일치하는지 확인
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new CustomException(ErrorCode.CURRENT_PASSWORD_NOT_EQUAL);
+            throw new CustomException(UserErrorCode.CURRENT_PASSWORD_NOT_EQUAL);
         }
     }
     // 비밀번호 변경
 
     public void updatePassword(User user, String newPassword) {
         if (passwordEncoder.matches(newPassword, user.getPassword())) {
-            throw new CustomException(ErrorCode.CURRENT_PASSWORD_EQUAL);
+            throw new CustomException(UserErrorCode.CURRENT_PASSWORD_EQUAL);
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
@@ -252,9 +248,9 @@ public class UserService {
     public void updateNickname(User user, String nickanme) {
         user.setNickname(nickanme);
 
-        // Kafka 전송
-        KafkaDto.UserSettingsDto settingDto = KafkaConverter.toSettingDto(user, "nickanme", nickanme);
-        kafkaService.sendUserSettings(settingDto);
+        // TODO : Kafka 전송
+//        KafkaDto.UserSettingsDto settingDto = KafkaConverter.toSettingDto(user, "nickanme", nickanme);
+//        kafkaService.sendUserSettings(settingDto);
 
         userRepository.save(user);
     }

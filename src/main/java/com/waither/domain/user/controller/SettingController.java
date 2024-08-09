@@ -5,6 +5,7 @@ import com.waither.domain.user.dto.response.SettingResDto;
 import com.waither.domain.user.entity.User;
 import com.waither.domain.user.service.commandService.SettingService;
 import com.waither.domain.user.service.queryService.SettingQueryService;
+import com.waither.global.annotation.AuthUser;
 import com.waither.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

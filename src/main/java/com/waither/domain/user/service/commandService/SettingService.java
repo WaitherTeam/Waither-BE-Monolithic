@@ -1,17 +1,14 @@
 package com.waither.domain.user.service.commandService;
 
-import com.waither.userservice.dto.request.SettingReqDto;
-import com.waither.userservice.entity.Region;
-import com.waither.userservice.entity.Setting;
-import com.waither.userservice.entity.User;
-import com.waither.userservice.global.exception.CustomException;
-import com.waither.userservice.global.response.ErrorCode;
-import com.waither.userservice.kafka.KafkaConverter;
-import com.waither.userservice.kafka.KafkaDto;
-import com.waither.userservice.kafka.KafkaService;
-import com.waither.userservice.repository.RegionRepository;
-import com.waither.userservice.repository.SettingRepository;
-import com.waither.userservice.repository.UserRepository;
+import com.waither.domain.user.dto.request.SettingReqDto;
+import com.waither.domain.user.entity.Region;
+import com.waither.domain.user.entity.Setting;
+import com.waither.domain.user.entity.User;
+import com.waither.domain.user.repository.RegionRepository;
+import com.waither.domain.user.repository.SettingRepository;
+import com.waither.domain.user.repository.UserRepository;
+import com.waither.global.exception.CustomException;
+import com.waither.global.response.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,7 +29,6 @@ public class SettingService {
     private final SettingRepository settingRepository;
     private final RegionRepository regionRepository;
 
-    private final KafkaService kafkaService;
 
     /* --------- Update  --------- */
 
@@ -61,7 +57,7 @@ public class SettingService {
     public void updateOutAlertSet(User user, SettingReqDto.OutAlertSetDto outAlertSetDto) {
         Setting setting = user.getSetting();
         if (!setting.isOutAlert()) {
-            throw new CustomException(ErrorCode.INACTIVE_OUT_ALERT_SETTING);
+            throw new CustomException(UserErrorCode.INACTIVE_OUT_ALERT_SETTING);
         }
         updateDays(setting, outAlertSetDto.days());
 
@@ -93,10 +89,10 @@ public class SettingService {
         Setting setting = user.getSetting();
         setting.setClimateAlert(climateAlertDto.climateAlert());
 
-        // Kafka 전송
-        KafkaDto.UserSettingsDto settingDto =
-                KafkaConverter.toSettingDto(user, "climateAlert", String.valueOf(climateAlertDto.climateAlert()));
-        kafkaService.sendUserSettings(settingDto);
+        // TODO: Kafka 전송
+//        KafkaDto.UserSettingsDto settingDto =
+//                KafkaConverter.toSettingDto(user, "climateAlert", String.valueOf(climateAlertDto.climateAlert()));
+//        kafkaService.sendUserSettings(settingDto);
 
         settingRepository.save(setting);
     }
@@ -104,15 +100,15 @@ public class SettingService {
     // 사용자 맞춤 예보 설정 변경
     public void updateUserAlert(User user, SettingReqDto.UserAlertDto userAlertDto) {
         if (!user.isCustom()) {
-            throw new CustomException(ErrorCode.INACTIVE_CUSTOM_SETTING);
+            throw new CustomException(UserErrorCode.INACTIVE_CUSTOM_SETTING);
         }
         Setting setting = user.getSetting();
         setting.setUserAlert(userAlertDto.userAlert());
 
-        // Kafka 전송
-        KafkaDto.UserSettingsDto settingDto =
-                KafkaConverter.toSettingDto(user, "userAlert", String.valueOf(userAlertDto.userAlert()));
-        kafkaService.sendUserSettings(settingDto);
+        // TODO: Kafka 전송
+//        KafkaDto.UserSettingsDto settingDto =
+//                KafkaConverter.toSettingDto(user, "userAlert", String.valueOf(userAlertDto.userAlert()));
+//        kafkaService.sendUserSettings(settingDto);
 
         settingRepository.save(setting);
     }
@@ -120,15 +116,15 @@ public class SettingService {
     // 강설 정보 알림 설정 변경
     public void updateSnowAlert(User user, SettingReqDto.SnowAlertDto snowAlertDto) {
         if (!user.isCustom()) {
-            throw new CustomException(ErrorCode.INACTIVE_CUSTOM_SETTING);
+            throw new CustomException(UserErrorCode.INACTIVE_CUSTOM_SETTING);
         }
         Setting setting = user.getSetting();
         setting.setSnowAlert(snowAlertDto.snowAlert());
 
-        // Kafka 전송
-        KafkaDto.UserSettingsDto settingDto =
-                KafkaConverter.toSettingDto(user, "snowAlert", String.valueOf(snowAlertDto.snowAlert()));
-        kafkaService.sendUserSettings(settingDto);
+        //TODO:  Kafka 전송
+//        KafkaDto.UserSettingsDto settingDto =
+//                KafkaConverter.toSettingDto(user, "snowAlert", String.valueOf(snowAlertDto.snowAlert()));
+//        kafkaService.sendUserSettings(settingDto);
 
         settingRepository.save(setting);
     }
@@ -136,21 +132,21 @@ public class SettingService {
     // 바람 세기 알림 설정 변경
     public void updateWind(User user, SettingReqDto.WindDto windDto) {
         if (!user.isCustom()) {
-            throw new CustomException(ErrorCode.INACTIVE_CUSTOM_SETTING);
+            throw new CustomException(UserErrorCode.INACTIVE_CUSTOM_SETTING);
         }
         Setting setting = user.getSetting();
         if (windDto.windAlert() != null) {
-            // Kafka 전송
-            KafkaDto.UserSettingsDto settingDto =
-                    KafkaConverter.toSettingDto(user, "windAlert", String.valueOf(windDto.windAlert()));
-            kafkaService.sendUserSettings(settingDto);
+            // TODO: Kafka 전송
+//            KafkaDto.UserSettingsDto settingDto =
+//                    KafkaConverter.toSettingDto(user, "windAlert", String.valueOf(windDto.windAlert()));
+//            kafkaService.sendUserSettings(settingDto);
             setting.setWindAlert(windDto.windAlert());
         }
         if (windDto.windDegree() != null) {
-            // Kafka 전송
-            KafkaDto.UserSettingsDto settingDto =
-                    KafkaConverter.toSettingDto(user, "windDegree", String.valueOf(windDto.windDegree()));
-            kafkaService.sendUserSettings(settingDto);
+            // TODO: Kafka 전송
+//            KafkaDto.UserSettingsDto settingDto =
+//                    KafkaConverter.toSettingDto(user, "windDegree", String.valueOf(windDto.windDegree()));
+//            kafkaService.sendUserSettings(settingDto);
             setting.setWindDegree(windDto.windDegree());
         }
 
@@ -162,10 +158,10 @@ public class SettingService {
         Setting setting = user.getSetting();
         setting.setRegionReport(regionReportDto.regionReport());
 
-        // Kafka 전송
-        KafkaDto.UserSettingsDto settingDto =
-                KafkaConverter.toSettingDto(user, "regionReport", String.valueOf(regionReportDto.regionReport()));
-        kafkaService.sendUserSettings(settingDto);
+        // TOD: Kafka 전송
+//        KafkaDto.UserSettingsDto settingDto =
+//                KafkaConverter.toSettingDto(user, "regionReport", String.valueOf(regionReportDto.regionReport()));
+//        kafkaService.sendUserSettings(settingDto);
 
         settingRepository.save(setting);
     }
@@ -182,10 +178,10 @@ public class SettingService {
         Setting setting = user.getSetting();
         setting.setWeight(weightDto.weight());
 
-        // Kafka 전송
-        KafkaDto.UserSettingsDto settingDto =
-                KafkaConverter.toSettingDto(user, "weight", String.valueOf(weightDto.weight()));
-        kafkaService.sendUserSettings(settingDto);
+        // TODO:  Kafka 전송
+//        KafkaDto.UserSettingsDto settingDto =
+//                KafkaConverter.toSettingDto(user, "weight", String.valueOf(weightDto.weight()));
+//        kafkaService.sendUserSettings(settingDto);
 
         settingRepository.save(setting);
     }

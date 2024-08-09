@@ -1,10 +1,16 @@
 package com.waither.domain.user.converter;
 
+import com.waither.domain.user.dto.request.SurveyReqDto;
+import com.waither.domain.user.entity.Survey;
 import com.waither.domain.user.entity.UserData;
+import com.waither.domain.user.entity.UserMedian;
 import com.waither.domain.user.entity.enums.Season;
+import com.waither.global.exception.CustomException;
+import com.waither.global.response.UserErrorCode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import static com.waither.global.utils.CalculateUtil.calculateMedian;
 
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -41,7 +47,7 @@ public class SurveyConverter {
                         .season(season)
                         .build();
             default:
-                throw new CustomException(ErrorCode.INVALID_SEASON);
+                throw new CustomException(UserErrorCode.INVALID_SEASON);
         }
     }
 

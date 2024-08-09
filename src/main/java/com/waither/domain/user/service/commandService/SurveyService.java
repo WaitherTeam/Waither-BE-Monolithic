@@ -1,17 +1,17 @@
 package com.waither.domain.user.service.commandService;
 
-import com.waither.userservice.converter.SurveyConverter;
-import com.waither.userservice.dto.request.SurveyReqDto;
-import com.waither.userservice.entity.*;
-import com.waither.userservice.entity.enums.Season;
-import com.waither.userservice.global.exception.CustomException;
-import com.waither.userservice.global.response.ErrorCode;
-import com.waither.userservice.kafka.KafkaConverter;
-import com.waither.userservice.kafka.KafkaDto;
-import com.waither.userservice.kafka.KafkaService;
-import com.waither.userservice.repository.SurveyRepository;
-import com.waither.userservice.repository.UserDataRepository;
-import com.waither.userservice.repository.UserMedianRepository;
+import com.waither.domain.user.converter.SurveyConverter;
+import com.waither.domain.user.dto.request.SurveyReqDto;
+import com.waither.domain.user.entity.Survey;
+import com.waither.domain.user.entity.User;
+import com.waither.domain.user.entity.UserData;
+import com.waither.domain.user.entity.UserMedian;
+import com.waither.domain.user.entity.enums.Season;
+import com.waither.domain.user.repository.SurveyRepository;
+import com.waither.domain.user.repository.UserDataRepository;
+import com.waither.domain.user.repository.UserMedianRepository;
+import com.waither.global.exception.CustomException;
+import com.waither.global.response.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,6 @@ public class SurveyService {
     private final UserDataRepository userDataRepository;
     private final UserMedianRepository userMedianRepository;
 
-    private final KafkaService kafkaService;
 
     @Transactional
     public void createSurvey(User user, SurveyReqDto.SurveyRequestDto surveyRequestDto) {
@@ -38,16 +37,16 @@ public class SurveyService {
         survey.setUser(user);
 
         UserData userData = userDataRepository.findByUserAndSeason(user, survey.getSeason())
-                .orElseThrow(() -> new CustomException(ErrorCode.NO_USER_DATA_FOUND));
+                .orElseThrow(() -> new CustomException(UserErrorCode.NO_USER_DATA_FOUND));
         UserMedian userMedian = userMedianRepository.findByUserAndSeason(user, survey.getSeason())
-                .orElseThrow(() -> new CustomException(ErrorCode.NO_USER_MEDIAN_FOUND));
+                .orElseThrow(() -> new CustomException(UserErrorCode.NO_USER_MEDIAN_FOUND));
 
         updateUserData(userData, surveyRequestDto.ans(), temp);
         updateUserMedian(userData, userMedian);
 
-        // Kafka 전송
-        KafkaDto.UserMedianDto userMedianDto = KafkaConverter.toUserMedianDto(user, userMedian);
-        kafkaService.sendUserMedian(userMedianDto);
+        //TODO: Kafka 전송
+//        KafkaDto.UserMedianDto userMedianDto = KafkaConverter.toUserMedianDto(user, userMedian);
+//        kafkaService.sendUserMedian(userMedianDto);
 
         surveyRepository.save(survey);
     }
@@ -57,7 +56,7 @@ public class SurveyService {
         double newValue = (userData.getLevel(ans) + temp) / 2 ;
 
         if (!isValidLevelValue(userData, ans, newValue)) {
-            throw new CustomException(ErrorCode.IGNORE_SURVEY_ANSWER);
+            throw new CustomException(UserErrorCode.IGNORE_SURVEY_ANSWER);
         }
 
         userData.updateLevelValue(ans, newValue);

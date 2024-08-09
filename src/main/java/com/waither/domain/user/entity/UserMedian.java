@@ -1,11 +1,12 @@
 package com.waither.domain.user.entity;
 
-import com.waither.userservice.entity.enums.Season;
-import com.waither.userservice.global.BaseEntity;
+import com.waither.domain.user.entity.enums.Season;
+import com.waither.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import static com.waither.userservice.global.util.CalculateUtil.calculateMedian;
+import static com.waither.global.utils.CalculateUtil.calculateMedian;
+
 
 @Builder
 @Getter

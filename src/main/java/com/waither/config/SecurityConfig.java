@@ -1,7 +1,6 @@
 package com.waither.config;
 
 
-import com.waither.global.utils.JwtUtil;
 import com.waither.global.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

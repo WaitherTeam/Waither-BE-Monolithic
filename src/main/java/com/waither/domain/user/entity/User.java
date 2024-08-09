@@ -1,8 +1,8 @@
 package com.waither.domain.user.entity;
 
-import com.waither.userservice.entity.enums.UserStatus;
-import com.waither.userservice.entity.type.AuthType;
-import com.waither.userservice.global.BaseEntity;
+import com.waither.domain.user.entity.enums.AuthType;
+import com.waither.domain.user.entity.enums.UserStatus;
+import com.waither.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

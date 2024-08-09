@@ -1,6 +1,6 @@
 package com.waither.domain.user.entity;
 
-import com.waither.userservice.global.BaseEntity;
+import com.waither.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
