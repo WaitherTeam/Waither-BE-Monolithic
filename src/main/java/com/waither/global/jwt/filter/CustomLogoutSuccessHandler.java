@@ -1,6 +1,6 @@
 package com.waither.global.jwt.filter;
 
-import com.waither.userservice.global.jwt.util.HttpResponseUtil;
+import com.waither.global.jwt.util.HttpResponseUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

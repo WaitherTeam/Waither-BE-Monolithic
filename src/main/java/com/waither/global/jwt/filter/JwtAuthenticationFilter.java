@@ -1,13 +1,13 @@
 package com.waither.global.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.waither.userservice.dto.request.UserReqDto;
-import com.waither.userservice.global.jwt.dto.JwtDto;
-import com.waither.userservice.global.jwt.execption.SecurityErrorCode;
-import com.waither.userservice.global.jwt.userdetails.PrincipalDetails;
-import com.waither.userservice.global.jwt.util.HttpResponseUtil;
-import com.waither.userservice.global.jwt.util.JwtUtil;
-import com.waither.userservice.global.response.ApiResponse;
+import com.waither.domain.user.dto.request.UserReqDto;
+import com.waither.global.jwt.dto.JwtDto;
+import com.waither.global.jwt.execption.SecurityErrorCode;
+import com.waither.global.jwt.userdetails.PrincipalDetails;
+import com.waither.global.jwt.util.HttpResponseUtil;
+import com.waither.global.jwt.util.JwtUtil;
+import com.waither.global.response.ApiResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,6 +1,8 @@
 package com.waither.global.utils;
 
 import com.waither.domain.noti.enums.Expressions;
+import com.waither.domain.user.entity.UserMedian;
+import com.waither.domain.user.entity.enums.Season;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -42,12 +44,10 @@ public class WeatherMessageUtil {
     public static Season getCurrentSeason() {
         LocalDateTime now = LocalDateTime.now();
         int month = now.getMonthValue();
-        if (3 <= month && month <= 5) { //봄 3, 4, 5
-            return Season.SPRING;
+        if ((3 <= month && month <= 5) || (9 <= month && month <= 11)) { //봄 or 가을 3, 4, 5 or 9, 10, 11
+            return Season.SPRING_AUTUMN;
         } else if (6 <= month && month <= 8) { //여름 6, 7, 8
             return Season.SUMMER;
-        }else if (9 <= month && month <= 11) { //여름 9, 10, 11
-            return Season.AUTUMN;
         } else return Season.WINTER; //겨울 12, 1, 2
     }
 

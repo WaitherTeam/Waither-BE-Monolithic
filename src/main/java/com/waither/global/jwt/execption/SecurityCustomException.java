@@ -1,7 +1,7 @@
 package com.waither.global.jwt.execption;
 
-import com.waither.userservice.global.exception.CustomException;
-import com.waither.userservice.global.response.status.BaseErrorCode;
+import com.waither.global.exception.CustomException;
+import com.waither.global.response.status.BaseErrorCode;
 import lombok.Getter;
 
 @Getter
