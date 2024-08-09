@@ -1,6 +1,6 @@
-package com.waither.domain.noti.api;
+package com.waither.domain.noti.controller;
 
-import com.waither.domain.noti.api.request.LocationDto;
+import com.waither.domain.noti.dto.request.LocationDto;
 import com.waither.domain.noti.service.NotificationService;
 import com.waither.global.annotation.AuthUser;
 import com.waither.global.response.ApiResponse;

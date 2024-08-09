@@ -1,6 +1,5 @@
 package com.waither.domain.noti.repository.jpa;
 
-import com.waither.domain.noti.entity.UserData;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

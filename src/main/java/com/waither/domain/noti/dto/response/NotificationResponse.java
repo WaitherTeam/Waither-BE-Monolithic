@@ -1,4 +1,4 @@
-package com.waither.domain.noti.api.response;
+package com.waither.domain.noti.dto.response;
 
 import com.waither.domain.noti.entity.Notification;
 import lombok.Builder;

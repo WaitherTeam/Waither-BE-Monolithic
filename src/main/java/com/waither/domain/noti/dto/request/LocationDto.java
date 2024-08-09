@@ -1,4 +1,4 @@
-package com.waither.domain.noti.api.request;
+package com.waither.domain.noti.dto.request;
 
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;

@@ -1,11 +1,9 @@
 package com.waither.domain.noti.service;
 
-import com.waither.domain.noti.api.request.LocationDto;
-import com.waither.domain.noti.api.response.MainWeatherResponse;
-import com.waither.domain.noti.api.response.NotificationResponse;
+import com.waither.domain.noti.dto.request.LocationDto;
+import com.waither.domain.noti.dto.response.MainWeatherResponse;
+import com.waither.domain.noti.dto.response.NotificationResponse;
 import com.waither.domain.noti.entity.Notification;
-import com.waither.domain.noti.entity.UserData;
-import com.waither.domain.noti.entity.UserMedian;
 import com.waither.domain.noti.entity.redis.NotificationRecord;
 import com.waither.global.enums.Season;
 import com.waither.domain.noti.repository.jpa.NotificationRepository;

@@ -1,6 +1,6 @@
-package com.waither.domain.noti.api;
+package com.waither.domain.noti.controller;
 
-import com.waither.domain.noti.api.request.TokenDto;
+import com.waither.domain.noti.dto.request.TokenDto;
 import com.waither.domain.noti.service.AlarmService;
 import com.waither.global.annotation.AuthUser;
 import com.waither.global.response.ApiResponse;

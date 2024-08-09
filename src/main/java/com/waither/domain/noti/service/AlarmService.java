@@ -1,6 +1,6 @@
 package com.waither.domain.noti.service;
 
-import com.waither.domain.noti.api.request.TokenDto;
+import com.waither.domain.noti.dto.request.TokenDto;
 import com.waither.domain.noti.entity.Notification;
 import com.waither.domain.noti.repository.jpa.NotificationRepository;
 import com.waither.global.utils.FireBaseUtil;

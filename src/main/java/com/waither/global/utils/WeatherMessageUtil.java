@@ -1,6 +1,5 @@
 package com.waither.global.utils;
 
-import com.waither.domain.noti.entity.UserMedian;
 import com.waither.global.enums.Expressions;
 import com.waither.global.enums.Season;
 import lombok.RequiredArgsConstructor;
