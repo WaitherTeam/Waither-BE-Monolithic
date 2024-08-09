@@ -1,23 +1,21 @@
 package com.waither.domain.weather.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.waither.weatherservice.dto.response.MainWeatherResponse;
-import com.waither.weatherservice.entity.DailyWeather;
-import com.waither.weatherservice.entity.ExpectedWeather;
-import com.waither.weatherservice.entity.Region;
-import com.waither.weatherservice.entity.WeatherAdvisory;
-import com.waither.weatherservice.exception.WeatherExceptionHandler;
-import com.waither.weatherservice.gps.GpsTransfer;
-import com.waither.weatherservice.kafka.KafkaMessage;
-import com.waither.weatherservice.kafka.Producer;
-import com.waither.weatherservice.openapi.ForeCastOpenApiResponse;
-import com.waither.weatherservice.openapi.MsgOpenApiResponse;
-import com.waither.weatherservice.openapi.OpenApiUtil;
-import com.waither.weatherservice.repository.DailyWeatherRepository;
-import com.waither.weatherservice.repository.ExpectedWeatherRepository;
-import com.waither.weatherservice.repository.RegionRepository;
-import com.waither.weatherservice.repository.WeatherAdvisoryRepository;
-import com.waither.weatherservice.response.WeatherErrorCode;
+import com.waither.domain.weather.dto.response.MainWeatherResponse;
+import com.waither.domain.weather.entity.DailyWeather;
+import com.waither.domain.weather.entity.ExpectedWeather;
+import com.waither.domain.weather.entity.Region;
+import com.waither.domain.weather.entity.WeatherAdvisory;
+import com.waither.domain.weather.gps.GpsTransfer;
+import com.waither.domain.weather.openapi.ForeCastOpenApiResponse;
+import com.waither.domain.weather.openapi.MsgOpenApiResponse;
+import com.waither.domain.weather.openapi.OpenApiUtil;
+import com.waither.domain.weather.repository.DailyWeatherRepository;
+import com.waither.domain.weather.repository.ExpectedWeatherRepository;
+import com.waither.domain.weather.repository.RegionRepository;
+import com.waither.domain.weather.repository.WeatherAdvisoryRepository;
+import com.waither.global.exception.CustomException;
+import com.waither.global.response.WeatherErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,7 +40,6 @@ public class WeatherService {
 	private final ExpectedWeatherRepository expectedWeatherRepository;
 	private final WeatherAdvisoryRepository weatherAdvisoryRepository;
 	private final RegionRepository regionRepository;
-	private final Producer producer;
 
 	public void createExpectedWeather(
 		int nx,
@@ -74,9 +71,10 @@ public class WeatherService {
 			.expectedSky(expectedSkyList)
 			.build();
 
-		String content = String.join(",", expectedWeather.getExpectedRain());
-		KafkaMessage kafkaMessage = KafkaMessage.of(regionName, content);
-		producer.produceMessage("alarm-rain", kafkaMessage);
+		//TODO: 이벤트 전송
+//		String content = String.join(",", expectedWeather.getExpectedRain());
+//		KafkaMessage kafkaMessage = KafkaMessage.of(regionName, content);
+//		producer.produceMessage("alarm-rain", kafkaMessage);
 
 		ExpectedWeather save = expectedWeatherRepository.save(expectedWeather);
 		log.info("[*] 예상 기후 : {}", save);
@@ -118,8 +116,9 @@ public class WeatherService {
 			.windDegree(wsd)
 			.build();
 
-		KafkaMessage kafkaMessage = KafkaMessage.of(regionName, dailyWeather.getWindDegree());
-		producer.produceMessage("alarm-wind", kafkaMessage);
+		//TODO: 이벤트 전송
+//		KafkaMessage kafkaMessage = KafkaMessage.of(regionName, dailyWeather.getWindDegree());
+//		producer.produceMessage("alarm-wind", kafkaMessage);
 
 		DailyWeather save = dailyWeatherRepository.save(dailyWeather);
 		log.info("[*] 하루 온도 : {}", save);
@@ -142,8 +141,9 @@ public class WeatherService {
 			.message(msg)
 			.build();
 
-		KafkaMessage kafkaMessage = KafkaMessage.of(location, msg);
-		producer.produceMessage("alarm-climate", kafkaMessage);
+		//TODO : 이벤트 전송
+//		KafkaMessage kafkaMessage = KafkaMessage.of(location, msg);
+//		producer.produceMessage("alarm-climate", kafkaMessage);
 
 		WeatherAdvisory save = weatherAdvisoryRepository.save(weatherAdvisory);
 		log.info("[*] 기상 특보 : {}", save);
@@ -163,7 +163,7 @@ public class WeatherService {
 		List<Region> region = regionRepository.findRegionByLatAndLong(latitude, longitude);
 
 		if (region.isEmpty())
-			throw new WeatherExceptionHandler(WeatherErrorCode.REGION_NOT_FOUND);
+			throw new CustomException(WeatherErrorCode.REGION_NOT_FOUND);
 
 		String regionName = region.get(0).getRegionName();
 
@@ -179,12 +179,12 @@ public class WeatherService {
 		log.info("[Main - api] expectedWeatherKey : {}", expectedWeatherKey);
 
 		DailyWeather dailyWeather = dailyWeatherRepository.findById(dailyWeatherKey)
-			.orElseThrow(() -> new WeatherExceptionHandler(WeatherErrorCode.DAILY_NOT_FOUND));
+			.orElseThrow(() -> new CustomException(WeatherErrorCode.DAILY_NOT_FOUND));
 
 		log.info(regionName + "[Main - api] DailyWeather : {}", dailyWeather);
 
 		ExpectedWeather expectedWeather = expectedWeatherRepository.findById(expectedWeatherKey)
-			.orElseThrow(() -> new WeatherExceptionHandler(WeatherErrorCode.EXPECTED_NOT_FOUND));
+			.orElseThrow(() -> new CustomException(WeatherErrorCode.EXPECTED_NOT_FOUND));
 
 		log.info(regionName + "[Main - api] ExpectedWeather : {}", expectedWeather);
 

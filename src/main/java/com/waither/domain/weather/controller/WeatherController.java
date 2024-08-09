@@ -1,9 +1,9 @@
 package com.waither.domain.weather.controller;
 
-import com.waither.weatherservice.dto.request.GetWeatherRequest;
-import com.waither.weatherservice.dto.response.MainWeatherResponse;
-import com.waither.weatherservice.response.ApiResponse;
-import com.waither.weatherservice.service.WeatherService;
+import com.waither.domain.weather.dto.request.GetWeatherRequest;
+import com.waither.domain.weather.dto.response.MainWeatherResponse;
+import com.waither.domain.weather.service.WeatherService;
+import com.waither.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

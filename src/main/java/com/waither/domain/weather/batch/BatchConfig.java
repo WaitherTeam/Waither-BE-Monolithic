@@ -1,6 +1,6 @@
 package com.waither.domain.weather.batch;
 
-import com.waither.weatherservice.service.WeatherService;
+import com.waither.domain.weather.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

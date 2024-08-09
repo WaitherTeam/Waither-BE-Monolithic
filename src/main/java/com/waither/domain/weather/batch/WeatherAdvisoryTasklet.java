@@ -1,9 +1,9 @@
 package com.waither.domain.weather.batch;
 
-import com.waither.weatherservice.entity.Region;
-import com.waither.weatherservice.exception.WeatherExceptionHandler;
-import com.waither.weatherservice.response.WeatherErrorCode;
-import com.waither.weatherservice.service.WeatherService;
+import com.waither.domain.weather.entity.Region;
+import com.waither.domain.weather.service.WeatherService;
+import com.waither.global.exception.CustomException;
+import com.waither.global.response.WeatherErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
@@ -27,9 +27,9 @@ public class WeatherAdvisoryTasklet implements Tasklet {
 				try {
 					weatherService.createWeatherAdvisory(region.getStartLat(), region.getStartLon());
 				} catch (URISyntaxException e) {
-					throw new WeatherExceptionHandler(WeatherErrorCode.WEATHER_URI_ERROR);
+					throw new CustomException(WeatherErrorCode.WEATHER_URI_ERROR);
 				} catch (IOException e) {
-					throw new WeatherExceptionHandler(WeatherErrorCode.WEATHER_OPENAPI_ERROR);
+					throw new CustomException(WeatherErrorCode.WEATHER_OPENAPI_ERROR);
 				}
 			});
 		return RepeatStatus.FINISHED;
