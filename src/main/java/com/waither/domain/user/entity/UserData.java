@@ -1,5 +1,9 @@
 package com.waither.domain.user.entity;
 
+import com.waither.domain.user.entity.enums.Season;
+import com.waither.global.entity.BaseEntity;
+import com.waither.global.exception.CustomException;
+import com.waither.global.response.UserErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,7 +44,7 @@ public class UserData extends BaseEntity {
             case 3 -> level3;
             case 4 -> level4;
             case 5 -> level5;
-            default -> throw new CustomException(ErrorCode.INVALID_LEVEL_VALUE);
+            default -> throw new CustomException(UserErrorCode.INVALID_LEVEL_VALUE);
         };
     }
 
@@ -62,7 +66,7 @@ public class UserData extends BaseEntity {
                 this.level5 = newValue;
                 break;
             default:
-                throw new CustomException(ErrorCode.INVALID_LEVEL_VALUE);
+                throw new CustomException(UserErrorCode.INVALID_LEVEL_VALUE);
         }
     }
 

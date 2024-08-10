@@ -1,9 +1,10 @@
 package com.waither.domain.user.dto.converter;
 
-import com.waither.userservice.dto.request.UserReqDto;
-import com.waither.userservice.dto.response.KakaoResDto;
-import com.waither.userservice.entity.User;
-import com.waither.userservice.entity.enums.UserStatus;
+
+import com.waither.domain.user.dto.request.UserReqDto;
+import com.waither.domain.user.dto.response.KakaoResDto;
+import com.waither.domain.user.entity.User;
+import com.waither.domain.user.entity.enums.UserStatus;
 
 public class AccountConverter {
 

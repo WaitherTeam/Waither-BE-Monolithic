@@ -1,6 +1,6 @@
 package com.waither.domain.weather.repository;
 
-import com.waither.weatherservice.entity.Region;
+import com.waither.domain.weather.entity.Region;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,11 +1,11 @@
 package com.waither.global.jwt.filter;
 
 
-import com.waither.userservice.global.jwt.execption.SecurityCustomException;
-import com.waither.userservice.global.jwt.execption.SecurityErrorCode;
-import com.waither.userservice.global.jwt.util.HttpResponseUtil;
-import com.waither.userservice.global.response.ApiResponse;
-import com.waither.userservice.global.response.status.BaseErrorCode;
+import com.waither.global.jwt.execption.SecurityCustomException;
+import com.waither.global.jwt.execption.SecurityErrorCode;
+import com.waither.global.jwt.util.HttpResponseUtil;
+import com.waither.global.response.ApiResponse;
+import com.waither.global.response.status.BaseErrorCode;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

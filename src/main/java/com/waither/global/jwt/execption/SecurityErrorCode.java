@@ -1,7 +1,7 @@
 package com.waither.global.jwt.execption;
 
-import com.waither.userservice.global.response.ApiResponse;
-import com.waither.userservice.global.response.status.BaseErrorCode;
+import com.waither.global.response.ApiResponse;
+import com.waither.global.response.status.BaseErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

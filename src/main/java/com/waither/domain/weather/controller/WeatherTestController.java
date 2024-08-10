@@ -1,10 +1,10 @@
 package com.waither.domain.weather.controller;
 
-import com.waither.weatherservice.dto.request.AccuweatherTestRequest;
-import com.waither.weatherservice.dto.request.AdvisoryRequest;
-import com.waither.weatherservice.dto.request.AirTestRequest;
-import com.waither.weatherservice.dto.request.ForeCastTestRequest;
-import com.waither.weatherservice.service.WeatherService;
+import com.waither.domain.weather.dto.request.AccuweatherTestRequest;
+import com.waither.domain.weather.dto.request.AdvisoryRequest;
+import com.waither.domain.weather.dto.request.AirTestRequest;
+import com.waither.domain.weather.dto.request.ForeCastTestRequest;
+import com.waither.domain.weather.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +46,7 @@ public class WeatherTestController {
 		weatherService.convertLocation(request.latitude(), request.longitude());
 	}
 
-	@GetMapping("/converㅅ")
+	@GetMapping("/convert")
 	public LocalDateTime convertTest() {
 
 		LocalDateTime specificDateTime = LocalDateTime.of(2024, 7, 5, 23, 0);

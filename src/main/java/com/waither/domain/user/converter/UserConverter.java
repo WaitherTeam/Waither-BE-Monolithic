@@ -1,8 +1,8 @@
 package com.waither.domain.user.converter;
 
-import com.waither.userservice.dto.request.UserReqDto;
-import com.waither.userservice.entity.User;
-import com.waither.userservice.entity.enums.UserStatus;
+import com.waither.domain.user.dto.request.UserReqDto;
+import com.waither.domain.user.entity.User;
+import com.waither.domain.user.entity.enums.UserStatus;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

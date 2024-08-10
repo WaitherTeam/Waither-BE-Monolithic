@@ -1,7 +1,7 @@
 package com.waither.domain.weather.gps;
 
-import com.waither.weatherservice.exception.WeatherExceptionHandler;
-import com.waither.weatherservice.response.WeatherErrorCode;
+import com.waither.global.exception.CustomException;
+import com.waither.global.response.WeatherErrorCode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
@@ -137,7 +137,7 @@ public class GpsTransfer {
 			}
 			workbook.close();
 		} catch (IOException e) {
-			throw new WeatherExceptionHandler(WeatherErrorCode.WEATHER_MAIN_ERROR);
+			throw new CustomException(WeatherErrorCode.WEATHER_MAIN_ERROR);
 		}
 		return regionCode;
 	}

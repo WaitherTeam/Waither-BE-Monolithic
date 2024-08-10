@@ -1,7 +1,7 @@
 package com.waither.global.jwt.execption;
 
-import com.waither.userservice.global.jwt.util.HttpResponseUtil;
-import com.waither.userservice.global.response.ApiResponse;
+import com.waither.global.jwt.util.HttpResponseUtil;
+import com.waither.global.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.waither.global.jwt.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.waither.userservice.global.response.ApiResponse;
+import com.waither.global.response.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

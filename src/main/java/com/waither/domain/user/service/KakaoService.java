@@ -1,6 +1,6 @@
 package com.waither.domain.user.service;
 
-import com.waither.userservice.dto.response.KakaoResDto;
+import com.waither.domain.user.dto.response.KakaoResDto;
 import io.netty.handler.codec.http.HttpHeaderValues;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,8 @@
 package com.waither.domain.user.service.queryService;
 
-import com.waither.userservice.converter.SettingConverter;
-import com.waither.userservice.dto.response.SettingResDto;
-import com.waither.userservice.entity.User;
+import com.waither.domain.user.converter.SettingConverter;
+import com.waither.domain.user.dto.response.SettingResDto;
+import com.waither.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
