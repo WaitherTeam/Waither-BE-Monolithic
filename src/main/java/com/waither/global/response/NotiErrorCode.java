@@ -10,8 +10,9 @@ import org.springframework.http.HttpStatus;
 public enum NotiErrorCode implements BaseErrorCode {
 
 	// 데이터 관련 에러
-	NO_USER_MEDIAN_REGISTERED(HttpStatus.NOT_FOUND, "USER404_0", "사용자 설정값이 존재하지 않습니다."),
-	NO_USER_DATA_REGISTERED(HttpStatus.NOT_FOUND, "USER404_1", "사용자 데이터 값이 존재하지 않습니다."),
+	USER_MEDIAN_NOT_FOUND(HttpStatus.NOT_FOUND, "USER404_0", "사용자 설정값이 존재하지 않습니다."),
+	USER_DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "USER404_1", "사용자 데이터 값이 존재하지 않습니다."),
+	USER_SETTINGS_NOT_FOUND(HttpStatus.NOT_FOUND, "USER404_2", "사용자 설정 값이 존재하지 않습니다."),
 
 	//통신 과정 에러
 	COMMUNICATION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500_1", "통신 과정에서 문제가 발생했습니다."),

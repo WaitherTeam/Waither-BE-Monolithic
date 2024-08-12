@@ -1,5 +1,6 @@
 package com.waither.domain.noti.entity.redis;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,11 +14,12 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash
+@RedisHash(value = "notification_record")
 public class NotificationRecord {
 
     //유저 식별자
     @Id
+    @Column(name = "email", nullable = false)
     private String email;
 
     //마지막 강수 알림 받은 시간

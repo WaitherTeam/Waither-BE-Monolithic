@@ -4,9 +4,7 @@ import com.waither.domain.noti.entity.redis.NotificationRecord;
 import com.waither.domain.noti.repository.redis.NotificationRecordRepository;
 import com.waither.domain.user.entity.Setting;
 import com.waither.domain.user.repository.SettingRepository;
-import com.waither.domain.user.repository.UserDataRepository;
 import com.waither.global.event.WeatherEvent;
-import com.waither.global.utils.RedisUtil;
 import com.waither.global.utils.WeatherMessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +26,7 @@ public class NotificationEventListener {
 
     private final AlarmService alarmService;
     private final NotificationRecordRepository notificationRecordRepository;
-    private final UserDataRepository userDataRepository;
     private final SettingRepository settingRepository;
-    private final RedisUtil redisUtil;
 
 
     /**
@@ -61,7 +57,7 @@ public class NotificationEventListener {
 
         log.info("[ 푸시 알림 ] 바람 세기 알림 전송");
 
-        alarmService.sendAlarms(emailsToSend,title, sb.toString());
+        alarmService.sendAlarmsByEmails(emailsToSend,title, sb.toString());
 
         //Record 알림 시간 초기화
         emailsToSend
@@ -122,7 +118,7 @@ public class NotificationEventListener {
 
 
         log.info("[ 푸시알림 ] 강수량 알림");
-        alarmService.sendAlarms(emailsToSend, title, sb.toString());
+        alarmService.sendAlarmsByEmails(emailsToSend, title, sb.toString());
 
         //Record 알림 시간 초기화
         emailsToSend
@@ -162,7 +158,7 @@ public class NotificationEventListener {
         sb.append("[기상청 기상 특보] ").append(message);
 
         log.info("[ 푸시알림 ] 기상 특보 알림");
-        alarmService.sendAlarms(emailsToSend, title, sb.toString());
+        alarmService.sendAlarmsByEmails(emailsToSend, title, sb.toString());
     }
 
 

@@ -1,5 +1,6 @@
 package com.waither.domain.noti.entity;
 
+import com.waither.domain.user.entity.User;
 import com.waither.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,6 +21,11 @@ public class Notification extends BaseEntity {
 
     private String content;
 
-    private String email;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
