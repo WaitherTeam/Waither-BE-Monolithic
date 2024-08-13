@@ -9,7 +9,8 @@
 
 <br><br><br><br>
 # ⛓️ Server Architecture
-![Waither Server Architecture](https://github.com/WaitherTeam/Waither-BE/assets/98632435/cf6e747b-a71c-4ad9-870b-297b79e4c132)
+![Waither Project Server Architecture - Monolithic](https://github.com/user-attachments/assets/7893273c-e0ea-4841-8b78-d8a66101e5de)
+
 <br><br>
 # 🔍 Using API
 - <a href="https://www.data.go.kr/data/15084084/openapi.do">기상청_단기예보 ((구)_동네예보) 조회서비스</a> <br>
