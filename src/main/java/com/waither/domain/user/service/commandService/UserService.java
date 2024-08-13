@@ -58,7 +58,7 @@ public class UserService {
 //            throw new CustomException(ErrorCode.INVALID_Account);
 //        }
         User newUser = UserConverter.toUser(requestDto, passwordEncoder);
-        Region newRegion = RegionConverter.createRegion();
+        UserRegion newUserRegion = RegionConverter.createRegion();
         Setting newSetting = SettingConverter.createSetting();
 
         // 모든 계절에 대한 UserData 생성
@@ -80,7 +80,7 @@ public class UserService {
                 .toList();
 
         // 연관관계 설정
-        newSetting.setRegion(newRegion);
+        newSetting.setUserRegion(newUserRegion);
         newUser.setSetting(newSetting);
         newUser.setUserData(userDataList);
         newUser.setUserMedian(userMedianList);
@@ -95,9 +95,9 @@ public class UserService {
         User newUser = AccountConverter.toUser(userInfo);
 
         Setting defaultSetting = deafultSettings();
-        Region defaultRegion = deafultRegion();
+        UserRegion defaultUserRegion = deafultRegion();
 
-        defaultSetting.setRegion(defaultRegion);
+        defaultSetting.setUserRegion(defaultUserRegion);
         newUser.setSetting(defaultSetting);
         userRepository.save(newUser);
     }
@@ -271,8 +271,8 @@ public class UserService {
                 .build();
     }
 
-    private Region deafultRegion() {
-        return Region.builder()
+    private UserRegion deafultRegion() {
+        return UserRegion.builder()
                 .regionName("서울시")
                 .longitude(37.5665)
                 .latitude(126.9780)

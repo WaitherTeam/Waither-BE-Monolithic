@@ -1,10 +1,10 @@
 package com.waither.domain.user.service.commandService;
 
 import com.waither.domain.user.dto.request.SettingReqDto;
-import com.waither.domain.user.entity.Region;
+import com.waither.domain.user.entity.UserRegion;
 import com.waither.domain.user.entity.Setting;
 import com.waither.domain.user.entity.User;
-import com.waither.domain.user.repository.RegionRepository;
+import com.waither.domain.user.repository.UserRegionRepository;
 import com.waither.domain.user.repository.SettingRepository;
 import com.waither.domain.user.repository.UserRepository;
 import com.waither.global.exception.CustomException;
@@ -27,7 +27,7 @@ public class SettingService {
 
     private final UserRepository userRepository;
     private final SettingRepository settingRepository;
-    private final RegionRepository regionRepository;
+    private final UserRegionRepository userRegionRepository;
 
 
     /* --------- Update  --------- */
@@ -168,9 +168,9 @@ public class SettingService {
 
     // 직장 지역 설정
     public void updateRegion(User user, SettingReqDto.RegionDto regionDto) {
-        Region region = user.getSetting().getRegion();
-        region.update(regionDto.regionName(), regionDto.longitude(), regionDto.latitude());
-        regionRepository.save(region);
+        UserRegion userRegion = user.getSetting().getUserRegion();
+        userRegion.update(regionDto.regionName(), regionDto.longitude(), regionDto.latitude());
+        userRegionRepository.save(userRegion);
     }
 
     // 사용자 가중치 설정

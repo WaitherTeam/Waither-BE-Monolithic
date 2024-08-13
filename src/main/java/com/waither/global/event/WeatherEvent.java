@@ -1,6 +1,5 @@
 package com.waither.global.event;
 
-import com.waither.domain.user.entity.Region;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
