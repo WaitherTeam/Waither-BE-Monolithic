@@ -1,10 +1,7 @@
 package com.waither.config;
 
 
-import com.waither.global.jwt.filter.CustomLogoutSuccessHandler;
-import com.waither.global.jwt.filter.JwtAuthenticationFilter;
-import com.waither.global.jwt.filter.JwtExceptionFilter;
-import com.waither.global.jwt.filter.JwtLogoutFilter;
+import com.waither.global.jwt.filter.*;
 import com.waither.global.jwt.util.JwtUtil;
 import com.waither.global.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -80,8 +77,8 @@ public class SecurityConfig {
 
         http
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
-//        http
-//                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil, redisUtil), JwtAuthenticationFilter.class);
+        http
+                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil, redisUtil), JwtAuthenticationFilter.class);
         http
                 .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
 
