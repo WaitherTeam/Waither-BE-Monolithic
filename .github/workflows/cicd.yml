@@ -57,6 +57,9 @@ jobs:
     # AWS EC2 Server Connect & Docker 명령어 실행
     - name: AWS EC2 Connection
       uses: appleboy/ssh-action@v0.1.6
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_IMAGENAME: ${{ secrets.DOCKERHUB_IMAGENAME }}
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USERNAME }}
