@@ -133,7 +133,7 @@ public class NotificationEventListener {
     /**
      * 기상 특보 알림 Listener
      * */
-    @Transactional
+    @Async
     @TransactionalEventListener(classes = WeatherEvent.WeatherWarning.class, phase = TransactionPhase.AFTER_COMMIT)
     public void handleWeatherWarning(WeatherEvent.WeatherWarning warningEvent) {
 

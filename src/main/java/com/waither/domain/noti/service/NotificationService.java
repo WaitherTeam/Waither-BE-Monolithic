@@ -49,7 +49,7 @@ public class NotificationService {
     @Transactional(readOnly = true)
     public List<NotificationResponse> getNotifications(String email) {
 
-        return notificationRepository.findAllByEmail(email)
+        return notificationRepository.findAllByUser_Email(email)
                 .stream().map(NotificationResponse::of).toList();
     }
 
