@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HealthCheck {
 
     @GetMapping("")
-    public ApiResponse<?> healthCheck() {
-        return ApiResponse.onSuccess(null);
+    public ResponseEntity<?> healthCheck() {
+        return ResponseEntity.ok("UP");
     }
 }
