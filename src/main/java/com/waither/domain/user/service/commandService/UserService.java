@@ -85,9 +85,7 @@ public class UserService {
         newUser.setUserData(userDataList);
         newUser.setUserMedian(userMedianList);
 
-        // TODO: 초기값 Kafka 전송
-//        KafkaDto.InitialDataDto initialDataDto = KafkaConverter.toInitialData(newUser, newSetting, userMedianList);
-//        kafkaService.sendInitialData(initialDataDto);
+        // 초기값 Kafka 전송 -> 삭제
         userRepository.save(newUser);
     }
 
@@ -248,9 +246,7 @@ public class UserService {
     public void updateNickname(User user, String nickanme) {
         user.setNickname(nickanme);
 
-        // TODO : Kafka 전송
-//        KafkaDto.UserSettingsDto settingDto = KafkaConverter.toSettingDto(user, "nickanme", nickanme);
-//        kafkaService.sendUserSettings(settingDto);
+        // Kafka 전송 -> 삭제
 
         userRepository.save(user);
     }
