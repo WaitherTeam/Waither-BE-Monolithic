@@ -20,8 +20,8 @@ public class SurveyController {
 
     private final SurveyService surveyService;
     @PostMapping("/submit")
-    public ApiResponse<String> createSurvey(@AuthUser User user, @RequestBody SurveyReqDto.SurveyRequestDto surveyRequestDto) {
-        surveyService.createSurvey(user, surveyRequestDto);
+    public ApiResponse<String> createSurvey(@AuthUser String email, @RequestBody SurveyReqDto.SurveyRequestDto surveyRequestDto) {
+        surveyService.createSurvey(email, surveyRequestDto);
         return ApiResponse.onSuccess("survey 생성완료");
     }
 

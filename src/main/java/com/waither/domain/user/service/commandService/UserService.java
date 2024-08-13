@@ -221,12 +221,16 @@ public class UserService {
     // 임시 비밀번호로 비밀번호를 변경
 
     public void changeToTempPassword(String email, String tempPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         // 이메일로 사용자 조회
-        userRepository.findByEmail(email).get().setPassword(passwordEncoder.encode(tempPassword));
+        user.setPassword(passwordEncoder.encode(tempPassword));
     }
     // 현재 비밀번호 체크
 
-    public void checkPassword(User user, String currentPassword) {
+    public void checkPassword(String email, String currentPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         // 현재 비밀번호가 일치하는지 확인
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             throw new CustomException(UserErrorCode.CURRENT_PASSWORD_NOT_EQUAL);
@@ -234,25 +238,28 @@ public class UserService {
     }
     // 비밀번호 변경
 
-    public void updatePassword(User user, String newPassword) {
+    public void updatePassword(String email, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         if (passwordEncoder.matches(newPassword, user.getPassword())) {
             throw new CustomException(UserErrorCode.CURRENT_PASSWORD_EQUAL);
         }
         user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
     }
     // 닉네임 변경
 
-    public void updateNickname(User user, String nickanme) {
+    public void updateNickname(String email, String nickanme) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         user.setNickname(nickanme);
 
         // Kafka 전송 -> 삭제
-
-        userRepository.save(user);
     }
     // 회원 삭제
 
-    public void deleteUser(User user){
+    public void deleteUser(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         userRepository.delete(user);
     }
 
