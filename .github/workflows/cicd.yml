@@ -67,6 +67,7 @@ jobs:
         port: ${{ secrets.EC2_SSH_PORT }}
         timeout: 60s 
         script: |
+          rm deploy.sh
           wget https://raw.githubusercontent.com/WaitherTeam/Waither-BE-Monolithic/main/deploy.sh
           chmod +x deploy.sh
           ./deploy.sh
