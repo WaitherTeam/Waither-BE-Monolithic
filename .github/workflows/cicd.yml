@@ -64,7 +64,6 @@ jobs:
         port: ${{ secrets.EC2_SSH_PORT }}
         timeout: 60s 
         script: |
-          sudo docker stop ${{ secrets.DOCKERHUB_IMAGENAME }}
-          sudo docker rm ${{ secrets.DOCKERHUB_IMAGENAME }}
-          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGENAME }}
-          sudo docker run -it -d -p 8080:8080 --name ${{ secrets.DOCKERHUB_IMAGENAME }} -e TZ=Asia/Seoul ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_IMAGENAME }}
+          wget https://raw.githubusercontent.com/WaitherTeam/Waither-BE-Monolithic/main/deploy.sh
+          chmod +x deploy.sh
+          ./deploy.sh
