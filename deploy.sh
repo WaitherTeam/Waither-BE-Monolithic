@@ -31,12 +31,12 @@ deploy_new_version() {
 # 헬스 체크
 health_check() {
     local port=$1
-    local max_attempts=30
+    local max_attempts=10
     local attempt=1
 
     echo "Performing health check..."
     while [ $attempt -le $max_attempts ]; do
-        if curl -s "http://localhost:$port/actuator/health" | grep -q "UP"; then
+        if curl -s "http://localhost:$port/health" | grep -q "UP"; then
             echo "Health check passed!"
             return 0
         fi
@@ -93,6 +93,8 @@ main() {
         docker stop $new_color
         docker rm $new_color
     fi
+
+    docker image prune -f
 }
 
 # 스크립트 실행
