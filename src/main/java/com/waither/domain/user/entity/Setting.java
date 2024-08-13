@@ -82,7 +82,15 @@ public class Setting extends BaseEntity {
     // Mapping
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "region_id", unique = true)
-    private Region region;
+    private UserRegion userRegion;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     // Id에 Setter 쓰지 않기 위해, 명시적으로 지정
     public void setId(Long id) {

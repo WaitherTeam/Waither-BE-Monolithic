@@ -61,7 +61,7 @@ public class WeatherMessageUtil {
         }
     }
 
-    public static String getRainPredictions(List<Double> predictions) {
+    public static String getRainPredictionsMessage(List<Double> predictions) {
 
         List<String> predictionStr = predictions.stream()
                 .map(prediction -> prediction == 0 ? "강수없음" : getRainExpression(prediction))

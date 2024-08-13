@@ -67,34 +67,34 @@ public class UserController {
 
     // 닉네임 변경
     @PutMapping("/nickname")
-    public ApiResponse<String> updateNickname(@AuthUser User user,
+    public ApiResponse<String> updateNickname(@AuthUser String email,
                                               @RequestBody UserReqDto.NicknameDto nicknameDto) {
-        userService.updateNickname(user, nicknameDto.nickname());
+        userService.updateNickname(email, nicknameDto.nickname());
         return ApiResponse.onSuccess("닉네임이 " + nicknameDto.nickname() + "로 바뀌었습니다.");
     }
 
     // 비밀번호 확인
     @PostMapping("/password-check")
-    public ApiResponse<String> passwordCheckEmail(@AuthUser User user,
+    public ApiResponse<String> passwordCheckEmail(@AuthUser String email,
                                                   @RequestBody UserReqDto.PasswordCheckDto passwordCheckDto) {
-            userService.checkPassword(user, passwordCheckDto.password());
+            userService.checkPassword(email, passwordCheckDto.password());
         return ApiResponse.onSuccess("비밀번호가 확인되었습니다.");
     }
 
     // 비밀번호 변경
     @PutMapping("/password")
-    public ApiResponse<String> updatePassword(@AuthUser User user,
+    public ApiResponse<String> updatePassword(@AuthUser String email,
                                               @Valid @RequestBody UserReqDto.UpdatePasswordDto updatePasswordDto) {
-        userService.updatePassword(user, updatePasswordDto.password());
+        userService.updatePassword(email, updatePasswordDto.password());
         return ApiResponse.onSuccess("비밀번호가 변경되었습니다.");
     }
 
 
     // Todo : soft delete로 변경 고려
     @DeleteMapping("/delete")
-    public ApiResponse<String> deleteUser(@AuthUser User user) {
-        userService.deleteUser(user);
-        return ApiResponse.onSuccess(user.getEmail() + "님의 계정이 성공적으로 탈퇴되었습니다.");
+    public ApiResponse<String> deleteUser(@AuthUser String email) {
+        userService.deleteUser(email);
+        return ApiResponse.onSuccess(email + "님의 계정이 성공적으로 탈퇴되었습니다.");
     }
 
 

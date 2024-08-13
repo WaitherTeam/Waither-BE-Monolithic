@@ -10,6 +10,7 @@ import com.waither.domain.user.entity.enums.Season;
 import com.waither.domain.user.repository.SurveyRepository;
 import com.waither.domain.user.repository.UserDataRepository;
 import com.waither.domain.user.repository.UserMedianRepository;
+import com.waither.domain.user.repository.UserRepository;
 import com.waither.global.exception.CustomException;
 import com.waither.global.response.UserErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +29,13 @@ public class SurveyService {
     private final SurveyRepository surveyRepository;
     private final UserDataRepository userDataRepository;
     private final UserMedianRepository userMedianRepository;
+    private final UserRepository userRepository;
 
 
     @Transactional
-    public void createSurvey(User user, SurveyReqDto.SurveyRequestDto surveyRequestDto) {
+    public void createSurvey(String email, SurveyReqDto.SurveyRequestDto surveyRequestDto) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         Double temp = getTemp(surveyRequestDto.time());
         Survey survey = SurveyConverter.toSurvey(surveyRequestDto, temp, getCurrentSeason());
         survey.setUser(user);

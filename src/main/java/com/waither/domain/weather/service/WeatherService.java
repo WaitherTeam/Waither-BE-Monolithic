@@ -14,10 +14,12 @@ import com.waither.domain.weather.repository.DailyWeatherRepository;
 import com.waither.domain.weather.repository.ExpectedWeatherRepository;
 import com.waither.domain.weather.repository.RegionRepository;
 import com.waither.domain.weather.repository.WeatherAdvisoryRepository;
+import com.waither.global.event.WeatherEvent;
 import com.waither.global.exception.CustomException;
 import com.waither.global.response.WeatherErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +42,7 @@ public class WeatherService {
 	private final ExpectedWeatherRepository expectedWeatherRepository;
 	private final WeatherAdvisoryRepository weatherAdvisoryRepository;
 	private final RegionRepository regionRepository;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
 	public void createExpectedWeather(
 		int nx,
@@ -71,10 +74,8 @@ public class WeatherService {
 			.expectedSky(expectedSkyList)
 			.build();
 
-		//TODO: 이벤트 전송
-//		String content = String.join(",", expectedWeather.getExpectedRain());
-//		KafkaMessage kafkaMessage = KafkaMessage.of(regionName, content);
-//		producer.produceMessage("alarm-rain", kafkaMessage);
+		//이벤트 전송
+		applicationEventPublisher.publishEvent(new WeatherEvent.ExpectRain(regionName, expectedRainList));
 
 		ExpectedWeather save = expectedWeatherRepository.save(expectedWeather);
 		log.info("[*] 예상 기후 : {}", save);
@@ -116,9 +117,8 @@ public class WeatherService {
 			.windDegree(wsd)
 			.build();
 
-		//TODO: 이벤트 전송
-//		KafkaMessage kafkaMessage = KafkaMessage.of(regionName, dailyWeather.getWindDegree());
-//		producer.produceMessage("alarm-wind", kafkaMessage);
+		//이벤트 전송
+		applicationEventPublisher.publishEvent(new WeatherEvent.WindStrength(regionName, Double.valueOf(wsd)));
 
 		DailyWeather save = dailyWeatherRepository.save(dailyWeather);
 		log.info("[*] 하루 온도 : {}", save);
@@ -141,9 +141,8 @@ public class WeatherService {
 			.message(msg)
 			.build();
 
-		//TODO : 이벤트 전송
-//		KafkaMessage kafkaMessage = KafkaMessage.of(location, msg);
-//		producer.produceMessage("alarm-climate", kafkaMessage);
+		//이벤트 전송
+		applicationEventPublisher.publishEvent(new WeatherEvent.WeatherWarning(location, msg));
 
 		WeatherAdvisory save = weatherAdvisoryRepository.save(weatherAdvisory);
 		log.info("[*] 기상 특보 : {}", save);

@@ -1,6 +1,6 @@
 package com.waither.domain.user.converter;
 
-import com.waither.domain.user.entity.Region;
+import com.waither.domain.user.entity.UserRegion;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 public class RegionConverter {
 
     // Region 기본값으로 설정
-    public static Region createRegion() {
+    public static UserRegion createRegion() {
         // Region 기본값으로 설정
-        return Region.builder()
+        return UserRegion.builder()
                 .regionName("서울시")
                 .longitude(37.5665)
                 .latitude(126.9780)

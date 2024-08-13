@@ -1,6 +1,8 @@
 package com.waither.config;
 
 
+import com.waither.global.jwt.filter.*;
+import com.waither.global.jwt.util.JwtUtil;
 import com.waither.global.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -75,8 +77,8 @@ public class SecurityConfig {
 
         http
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
-//        http
-//                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil, redisUtil), JwtAuthenticationFilter.class);
+        http
+                .addFilterBefore(new JwtAuthorizationFilter(jwtUtil, redisUtil), JwtAuthenticationFilter.class);
         http
                 .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
 

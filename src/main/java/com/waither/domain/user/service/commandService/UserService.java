@@ -58,7 +58,7 @@ public class UserService {
 //            throw new CustomException(ErrorCode.INVALID_Account);
 //        }
         User newUser = UserConverter.toUser(requestDto, passwordEncoder);
-        Region newRegion = RegionConverter.createRegion();
+        UserRegion newUserRegion = RegionConverter.createRegion();
         Setting newSetting = SettingConverter.createSetting();
 
         // 모든 계절에 대한 UserData 생성
@@ -80,14 +80,12 @@ public class UserService {
                 .toList();
 
         // 연관관계 설정
-        newSetting.setRegion(newRegion);
+        newSetting.setUserRegion(newUserRegion);
         newUser.setSetting(newSetting);
         newUser.setUserData(userDataList);
         newUser.setUserMedian(userMedianList);
 
-        // TODO: 초기값 Kafka 전송
-//        KafkaDto.InitialDataDto initialDataDto = KafkaConverter.toInitialData(newUser, newSetting, userMedianList);
-//        kafkaService.sendInitialData(initialDataDto);
+        // 초기값 Kafka 전송 -> 삭제
         userRepository.save(newUser);
     }
 
@@ -97,9 +95,9 @@ public class UserService {
         User newUser = AccountConverter.toUser(userInfo);
 
         Setting defaultSetting = deafultSettings();
-        Region defaultRegion = deafultRegion();
+        UserRegion defaultUserRegion = deafultRegion();
 
-        defaultSetting.setRegion(defaultRegion);
+        defaultSetting.setUserRegion(defaultUserRegion);
         newUser.setSetting(defaultSetting);
         userRepository.save(newUser);
     }
@@ -223,12 +221,16 @@ public class UserService {
     // 임시 비밀번호로 비밀번호를 변경
 
     public void changeToTempPassword(String email, String tempPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         // 이메일로 사용자 조회
-        userRepository.findByEmail(email).get().setPassword(passwordEncoder.encode(tempPassword));
+        user.setPassword(passwordEncoder.encode(tempPassword));
     }
     // 현재 비밀번호 체크
 
-    public void checkPassword(User user, String currentPassword) {
+    public void checkPassword(String email, String currentPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         // 현재 비밀번호가 일치하는지 확인
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
             throw new CustomException(UserErrorCode.CURRENT_PASSWORD_NOT_EQUAL);
@@ -236,27 +238,28 @@ public class UserService {
     }
     // 비밀번호 변경
 
-    public void updatePassword(User user, String newPassword) {
+    public void updatePassword(String email, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         if (passwordEncoder.matches(newPassword, user.getPassword())) {
             throw new CustomException(UserErrorCode.CURRENT_PASSWORD_EQUAL);
         }
         user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
     }
     // 닉네임 변경
 
-    public void updateNickname(User user, String nickanme) {
+    public void updateNickname(String email, String nickanme) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         user.setNickname(nickanme);
 
-        // TODO : Kafka 전송
-//        KafkaDto.UserSettingsDto settingDto = KafkaConverter.toSettingDto(user, "nickanme", nickanme);
-//        kafkaService.sendUserSettings(settingDto);
-
-        userRepository.save(user);
+        // Kafka 전송 -> 삭제
     }
     // 회원 삭제
 
-    public void deleteUser(User user){
+    public void deleteUser(String email){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         userRepository.delete(user);
     }
 
@@ -275,8 +278,8 @@ public class UserService {
                 .build();
     }
 
-    private Region deafultRegion() {
-        return Region.builder()
+    private UserRegion deafultRegion() {
+        return UserRegion.builder()
                 .regionName("서울시")
                 .longitude(37.5665)
                 .latitude(126.9780)
