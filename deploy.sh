@@ -25,7 +25,7 @@ deploy_new_version() {
 
     echo "Deploying new version to $new_color server..."
     docker pull $DOCKER_IMAGE:latest
-    docker run -d --name $container_name -p $port:8080 -e TZ=Asia/Seoul $DOCKER_IMAGE:latest
+    docker run -d --name $container_name -p $port:8080 --network waither -e TZ=Asia/Seoul $DOCKER_IMAGE:latest
 }
 
 # 헬스 체크
