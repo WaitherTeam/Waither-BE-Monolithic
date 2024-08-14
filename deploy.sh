@@ -50,14 +50,14 @@ health_check() {
 }
 
 # nginx 설정 업데이트 및 리로드
-update_nginx_config() {
-    local new_color=$1
-    local old_color=$2
+# update_nginx_config() {
+#     local new_color=$1
+#     local old_color=$2
 
-    echo "Updating nginx configuration..."
-    sed -i "s/server ${old_color}:${BLUE_PORT}/server ${new_color}:${GREEN_PORT}/" $NGINX_CONF
-    nginx -s reload
-}
+#     echo "Updating nginx configuration..."
+#     sed -i "s/server ${old_color}:${BLUE_PORT}/server ${new_color}:${GREEN_PORT}/" $NGINX_CONF
+#     nginx -s reload
+# }
 
 # 이전 버전 정리
 cleanup_old_version() {
@@ -85,7 +85,7 @@ main() {
     deploy_new_version $new_color $new_port
 
     if health_check $new_port; then
-        update_nginx_config $new_color $active_server
+        # update_nginx_config $new_color $active_server
         cleanup_old_version $active_server
         echo "Deployment successful! New version is now active on $new_color server."
     else
