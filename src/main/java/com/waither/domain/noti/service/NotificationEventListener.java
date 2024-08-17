@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -32,7 +31,7 @@ public class NotificationEventListener {
     /**
      * 바람 세기 알림 Listener
      * @Query  : 0200, 0500, 0800, 1100, 1400, 1700, 2000, 2300  */
-    @Async
+    @Async("windStrengthTaskExecutor")
     @TransactionalEventListener(classes = WeatherEvent.WindStrength.class, phase = TransactionPhase.AFTER_COMMIT)
     public void handleWindStrength(WeatherEvent.WindStrength windStrengthEvent) {
 
@@ -77,7 +76,7 @@ public class NotificationEventListener {
      * 매우 강한 비 30mm 이상 <br>
      * <a href="https://www.kma.go.kr/kma/biz/forecast05.jsp">참고</a>
      */
-    @Async
+    @Async("expectRainTaskExecutor")
     @TransactionalEventListener(classes = WeatherEvent.ExpectRain.class, phase = TransactionPhase.AFTER_COMMIT)
     public void handleExpectRain(WeatherEvent.ExpectRain rainEvent) {
 
@@ -126,14 +125,13 @@ public class NotificationEventListener {
                     Optional<NotificationRecord> notificationRecord = notificationRecordRepository.findByEmail(email);
                     notificationRecord.ifPresent(NotificationRecord::initializeRainTime);
                 });
-
     }
 
 
     /**
      * 기상 특보 알림 Listener
      * */
-    @Async
+    @Async("weatherWarningTaskExecutor")
     @TransactionalEventListener(classes = WeatherEvent.WeatherWarning.class, phase = TransactionPhase.AFTER_COMMIT)
     public void handleWeatherWarning(WeatherEvent.WeatherWarning warningEvent) {
 
@@ -209,7 +207,12 @@ public class NotificationEventListener {
 
         // Notification Record에서 지역, 푸시 알림 시간으로 필터링
         return userQueryResult.stream()
-                .map(setting -> setting.getUser().getEmail())
+                .map(setting -> {
+                    log.info("setting id : {}", setting.getId());
+                    log.info("user : {}", setting.getUser());
+                    log.info("user email : {}", setting.getUser().getEmail());
+                    return setting.getUser().getEmail();
+                })
                 .filter(email -> {
                     Optional<NotificationRecord> notiRecord = notificationRecordRepository.findByEmail(email);
                     return isUserEligibleForRainAlert(region, currentHour, notiRecord);
