@@ -26,8 +26,8 @@ public class AlarmService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
 
-    public void updateToken(String email, TokenDto tokenDto) {
-        redisUtil.save(email, tokenDto.token());
+    public void updateToken(User currentUser, TokenDto tokenDto) {
+        redisUtil.save(currentUser.getEmail(), tokenDto.token());
     }
 
     public void sendSingleAlarmByUser(User user, String title, String message) {

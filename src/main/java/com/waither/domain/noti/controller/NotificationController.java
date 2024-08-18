@@ -2,7 +2,8 @@ package com.waither.domain.noti.controller;
 
 import com.waither.domain.noti.dto.request.LocationDto;
 import com.waither.domain.noti.service.NotificationService;
-import com.waither.global.annotation.AuthUser;
+import com.waither.domain.user.entity.User;
+import com.waither.global.jwt.annotation.CurrentUser;
 import com.waither.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -20,28 +21,28 @@ public class NotificationController {
 
     @Operation(summary = "Get notification", description = "알림 목록 조회하기")
     @GetMapping("")
-    public ApiResponse<?> getNotifications(@AuthUser String email) {
-        return ApiResponse.onSuccess(notificationService.getNotifications(email));
+    public ApiResponse<?> getNotifications(@CurrentUser User currentUser) {
+        return ApiResponse.onSuccess(notificationService.getNotifications(currentUser));
     }
 
     @Operation(summary = "Delete notification", description = "알림 삭제하기")
     @DeleteMapping("")
-    public ApiResponse<?> deleteNotification(@AuthUser String email, @RequestParam("id") String notificationId) {
-        notificationService.deleteNotification(email, notificationId);
+    public ApiResponse<?> deleteNotification(@CurrentUser User currentUser, @RequestParam("id") String notificationId) {
+        notificationService.deleteNotification(currentUser, notificationId);
         return ApiResponse.onSuccess(HttpStatus.OK);
     }
 
     @Operation(summary = "Send Go Out Alarm", description = "외출 알림 전송하기")
     @PostMapping("/goOut")
-    public ApiResponse<?> sendGoOutAlarm(@AuthUser String email, @RequestBody @Valid LocationDto location) {
-        notificationService.sendGoOutAlarm(email, location);
+    public ApiResponse<?> sendGoOutAlarm(@CurrentUser User currentUser, @RequestBody @Valid LocationDto location) {
+        notificationService.sendGoOutAlarm(currentUser, location);
         return ApiResponse.onSuccess(HttpStatus.OK);
     }
 
     @Operation(summary = "Current Location", description = "현재 위치 전송")
     @PostMapping("/location")
-    public ApiResponse<?> updateLocation(@AuthUser String email, @RequestBody @Valid LocationDto locationDto) {
-        notificationService.updateLocation(email, locationDto);
+    public ApiResponse<?> updateLocation(@CurrentUser User currentUser, @RequestBody @Valid LocationDto locationDto) {
+        notificationService.updateLocation(currentUser, locationDto);
         return ApiResponse.onSuccess(HttpStatus.OK);
     }
 

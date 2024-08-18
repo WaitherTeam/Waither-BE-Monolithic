@@ -33,8 +33,8 @@ public class SurveyService {
 
 
     @Transactional
-    public void createSurvey(String email, SurveyReqDto.SurveyRequestDto surveyRequestDto) {
-        User user = userRepository.findByEmail(email)
+    public void createSurvey(User currentUser, SurveyReqDto.SurveyRequestDto surveyRequestDto) {
+        User user = userRepository.findByEmail(currentUser.getEmail())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         Double temp = getTemp(surveyRequestDto.time());
         Survey survey = SurveyConverter.toSurvey(surveyRequestDto, temp, getCurrentSeason());
@@ -47,10 +47,6 @@ public class SurveyService {
 
         updateUserData(userData, surveyRequestDto.ans(), temp);
         updateUserMedian(userData, userMedian);
-
-        //TODO: Kafka 전송
-//        KafkaDto.UserMedianDto userMedianDto = KafkaConverter.toUserMedianDto(user, userMedian);
-//        kafkaService.sendUserMedian(userMedianDto);
 
         surveyRepository.save(survey);
     }
@@ -82,13 +78,13 @@ public class SurveyService {
         LocalDateTime now = LocalDateTime.now();
         int month = now.getMonthValue();
 
-            // 봄, 가을 3, 4, 5, 9, 10, 11
+        // 봄, 가을 3, 4, 5, 9, 10, 11
         if ((3 <= month && month <= 5) || (9 <= month && month <= 11)) {
             return Season.SPRING_AUTUMN;
-            // 여름 6, 7, 8
+        // 여름 6, 7, 8
         } else if (6 <= month && month <= 8) {
             return Season.SUMMER;
-            // 겨울 12, 1, 2
+        // 겨울 12, 1, 2
         } else {
             return Season.WINTER;
         }

@@ -30,7 +30,7 @@ public class OAuthController {
 
         String email = userInfo.getKakaoAccount().getEmail();
         if (!userService.isUserRegistered(email)) {
-            userService.signup(userInfo);
+            userService.signupForKakao(userInfo);
         }
 
         return ApiResponse.onSuccess(userService.provideTokenForOAuth(email));
