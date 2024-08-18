@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.waither.domain.user.dto.request.UserReqDto;
 import com.waither.global.jwt.dto.JwtDto;
 import com.waither.global.jwt.execption.SecurityErrorCode;
-import com.waither.global.jwt.userdetails.PrincipalDetails;
+import com.waither.global.jwt.userdetails.CustomUserDetails;
 import com.waither.global.jwt.util.HttpResponseUtil;
 import com.waither.global.jwt.util.JwtUtil;
 import com.waither.global.response.ApiResponse;
@@ -62,12 +62,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException {
 
-        PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+        CustomUserDetails customUserDetails = (CustomUserDetails) authResult.getPrincipal();
 
-        log.info("[*] Login Success! - Login with " + principalDetails.getUsername());
+        log.info("[*] Login Success! - Login with " + customUserDetails.getUsername());
         JwtDto jwtDto = new JwtDto(
-                jwtUtil.createJwtAccessToken(principalDetails),
-                jwtUtil.createJwtRefreshToken(principalDetails)
+                jwtUtil.createJwtAccessToken(customUserDetails),
+                jwtUtil.createJwtRefreshToken(customUserDetails)
         );
 
         log.info("Access Token: " + jwtDto.accessToken());

@@ -3,7 +3,7 @@ package com.waither.global.jwt.util;
 import com.waither.global.jwt.dto.JwtDto;
 import com.waither.global.jwt.execption.SecurityCustomException;
 import com.waither.global.jwt.execption.SecurityErrorCode;
-import com.waither.global.jwt.userdetails.PrincipalDetails;
+import com.waither.global.jwt.userdetails.CustomUserDetails;
 import com.waither.global.utils.RedisUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -68,9 +68,9 @@ public class JwtUtil {
     }
 
     // Token 발급
-    public String tokenProvider(PrincipalDetails principalDetails, Instant expiration) {
+    public String tokenProvider(CustomUserDetails customUserDetails, Instant expiration) {
         Instant issuedAt = Instant.now();
-        String authorities = principalDetails.getAuthorities().stream()
+        String authorities = customUserDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
@@ -78,7 +78,7 @@ public class JwtUtil {
                 .header()
                 .add("typ", "JWT")
                 .and()
-                .subject(principalDetails.getUsername())
+                .subject(customUserDetails.getUsername())
                 .claim("role", authorities)
                 .issuedAt(Date.from(issuedAt))
                 .expiration(Date.from(expiration))
@@ -87,19 +87,19 @@ public class JwtUtil {
     }
 
     // principalDetails 객체에 대해 새로운 JWT 액세스 토큰을 생성
-    public String createJwtAccessToken(PrincipalDetails principalDetails) {
+    public String createJwtAccessToken(CustomUserDetails customUserDetails) {
         Instant expiration = Instant.now().plusMillis(accessExpMs);
-        return tokenProvider(principalDetails, expiration);
+        return tokenProvider(customUserDetails, expiration);
     }
 
     // principalDetails 객체에 대해 새로운 JWT 리프레시 토큰을 생성
-    public String createJwtRefreshToken(PrincipalDetails principalDetails) {
+    public String createJwtRefreshToken(CustomUserDetails customUserDetails) {
         Instant expiration = Instant.now().plusMillis(refreshExpMs);
-        String refreshToken = tokenProvider(principalDetails, expiration);
+        String refreshToken = tokenProvider(customUserDetails, expiration);
 
         // 레디스에 저장
         redisUtil.save(
-                principalDetails.getUsername(),
+                customUserDetails.getUsername(),
                 refreshToken,
                 refreshExpMs,
                 TimeUnit.MILLISECONDS
@@ -112,7 +112,7 @@ public class JwtUtil {
     public JwtDto reissueToken(String refreshToken) throws SignatureException {
 
         // refreshToken에서 user 정보 뽑아서 새로 재 발금 (발급 시간, 유효 시간(reset)만 새로 적용)
-        PrincipalDetails userDetails = new PrincipalDetails(
+        CustomUserDetails userDetails = new CustomUserDetails(
                 getEmail(refreshToken),
                 null,
                 getRoles(refreshToken)

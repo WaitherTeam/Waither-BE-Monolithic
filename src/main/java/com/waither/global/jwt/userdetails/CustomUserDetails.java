@@ -1,40 +1,47 @@
 package com.waither.global.jwt.userdetails;
 
+import com.waither.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 @Slf4j
-@RequiredArgsConstructor
-public class PrincipalDetails implements UserDetails {
+public class CustomUserDetails extends User implements UserDetails {
 
-    private final String email;
-    private final String password;
-    private final String roles;
+    //인가용 객체 생성자
+    public CustomUserDetails(String email, String password, String role){
+        super(email, password, role);
+    }
 
+    //인증용 객체 생성자
+    public CustomUserDetails(User user) {
+        super(user.getEmail(), user.getPassword(), user.getRole());
+    }
 
     // 해당 User의 권한을 리턴 하는 곳
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(roles));
-        return authorities;
+        String role = super.getRole();
+        if (role != null && !role.trim().isEmpty()) {
+            return Collections.singletonList(new SimpleGrantedAuthority(role));
+        }
+        return Collections.emptyList();
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return super.getEmail();
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return super.getPassword();
     }
 
     // 계정 만료되지 않음
