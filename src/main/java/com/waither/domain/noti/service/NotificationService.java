@@ -21,9 +21,11 @@ import com.waither.global.exception.CustomException;
 import com.waither.global.response.ErrorCode;
 import com.waither.global.response.NotiErrorCode;
 import com.waither.global.response.UserErrorCode;
+import com.waither.global.utils.RedisUtil;
 import com.waither.global.utils.WeatherMessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,10 +49,8 @@ public class NotificationService {
 
 
     @Transactional(readOnly = true)
-    public List<NotificationResponse> getNotifications(String email) {
-
-        return notificationRepository.findAllByUser_Email(email)
-                .stream().map(NotificationResponse::of).toList();
+    public List<NotificationResponse> getNotifications(Long userId, Pageable pageable) {
+        return notificationRepository.findAllByUserIdOrderByCreatedAtDesc(userId, pageable).toList();
     }
 
     @Transactional
@@ -80,8 +80,7 @@ public class NotificationService {
 
         Season currentSeason = WeatherMessageUtil.getCurrentSeason();
 
-        LocalDateTime now = LocalDateTime.now();
-        String title = now.getMonth() + "월 " + now.getDayOfMonth() + "일 날씨 정보입니다.";
+        String title = generateWeatherForecastTitleByToday();
         StringBuilder sb = new StringBuilder();
 
         //메인 날씨 정보
@@ -130,6 +129,11 @@ public class NotificationService {
         return sb.toString();
     }
 
+    private static String generateWeatherForecastTitleByToday() {
+        LocalDateTime now = LocalDateTime.now();
+        return now.getMonth() + "월 " + now.getDayOfMonth() + "일 날씨 정보입니다.";
+    }
+
     //현재 위치 업데이트
     @Transactional
     public void updateLocation(String email, LocationDto locationDto) {
@@ -139,8 +143,13 @@ public class NotificationService {
         log.info("[ Notification Service ]  현재 위치 경도 (longitude) ---> {}", locationDto.longitude());
 
         String region = weatherService.convertGpsToRegionName(locationDto.latitude(), locationDto.longitude());
-        LocalDateTime fourHoursAgo = LocalDateTime.now().minusHours(4);
 
+        saveOrUpdateLocation(email, region);
+
+    }
+
+    private void saveOrUpdateLocation(String email, String region) {
+        LocalDateTime fourHoursAgo = LocalDateTime.now().minusHours(4);
         notificationRecordRepository.findByEmail(email)
                 .ifPresentOrElse(
                         record -> {
@@ -161,6 +170,5 @@ public class NotificationService {
                                         .build()
                         )
                 );
-
     }
 }
