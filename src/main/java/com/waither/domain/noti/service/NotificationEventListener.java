@@ -47,12 +47,12 @@ public class NotificationEventListener {
         // Wind Alert를 True로 설정한 User Query
         List<String> emailsToSend = getUsersForWindAlert(region, windStrength.intValue());
 
-        if (emailsToSend.isEmpty()) {
+         if (emailsToSend.isEmpty()) {
             log.info("[ Event Listener ] 보낼 사용자 없음.");
             return;
         }
 
-        sb.append("현재 바람 세기가 ").append(windStrengthEvent).append("m/s 이상입니다.");
+        getWindForecastExpression(windStrengthEvent, sb);
 
         log.info("[ 푸시 알림 ] 바람 세기 알림 전송");
 
@@ -64,6 +64,10 @@ public class NotificationEventListener {
                     Optional<NotificationRecord> notificationRecord = notificationRecordRepository.findByEmail(email);
                     notificationRecord.ifPresent(NotificationRecord::initializeWindTime);
                 });
+    }
+
+    private static StringBuilder getWindForecastExpression(WeatherEvent.WindStrength windStrengthEvent, StringBuilder sb) {
+        return sb.append("현재 바람 세기가 ").append(windStrengthEvent).append("m/s 이상입니다.");
     }
 
 
@@ -86,9 +90,7 @@ public class NotificationEventListener {
         List<String> expectRain = rainEvent.getExpectRain();
 
         List<String> emailsToSend = getUsersForRainAlert(region);
-
-
-
+        
         if (emailsToSend.isEmpty()) {
             log.info("[ Event Listener ] 보낼 사용자 없음.");
             return;
@@ -98,12 +100,8 @@ public class NotificationEventListener {
 
         String title = "Waither 강수 정보 알림";
 
-        //1시간 뒤, 2시간 뒤, 3시간 뒤, 4시간 뒤, 5시간 뒤, 6시간 뒤
-        List<Double> predictions =  expectRain.stream()
-                .map(String::trim) //공백 제거
-                .map(s -> s.equals("강수없음") ? "0" : s)
-                .map(Double::parseDouble)
-                .toList();
+        //[1시간 뒤, 2시간 뒤, 3시간 뒤, 4시간 뒤, 5시간 뒤, 6시간 뒤]
+        List<Double> predictions = transferPredictionsFromExpectRain(expectRain);
         String predictionMessage = WeatherMessageUtil.getRainPredictionsMessage(predictions);
 
         if (predictionMessage == null) {
@@ -112,7 +110,7 @@ public class NotificationEventListener {
             return;
         }
 
-        sb.append("현재 ").append(region).append(" 지역에 ").append(predictionMessage);
+        getRainForecaseExpression(region, sb, predictionMessage);
         //알림 보낼 사용자 이메일
 
 
@@ -125,6 +123,18 @@ public class NotificationEventListener {
                     Optional<NotificationRecord> notificationRecord = notificationRecordRepository.findByEmail(email);
                     notificationRecord.ifPresent(NotificationRecord::initializeRainTime);
                 });
+    }
+
+    private static StringBuilder getRainForecaseExpression(String region, StringBuilder sb, String predictionMessage) {
+        return sb.append("현재 ").append(region).append(" 지역에 ").append(predictionMessage);
+    }
+
+    private static List<Double> transferPredictionsFromExpectRain(List<String> expectRain) {
+        return expectRain.stream()
+                .map(String::trim) //공백 제거
+                .map(s -> s.equals("강수없음") ? "0" : s)
+                .map(Double::parseDouble)
+                .toList();
     }
 
 
