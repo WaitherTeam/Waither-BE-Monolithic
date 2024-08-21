@@ -59,15 +59,15 @@ public class UserService {
 //            throw new CustomException(ErrorCode.INVALID_Account);
 //        }
         User newUser = UserConverter.toUser(requestDto, passwordEncoder);
-        processAfterSignup(newUser);
-        userRepository.save(newUser);
+        User user = userRepository.save(newUser);
+        processAfterSignup(user);
     }
 
     // 회원가입 (카카오)
     public void signupForKakao(KakaoResDto.UserInfoResponseDto userInfo) {
         User newUser = UserConverter.toUser(userInfo);
-        processAfterSignup(newUser);
-        userRepository.save(newUser);
+        User user = userRepository.save(newUser);
+        processAfterSignup(user);
     }
 
     private void processAfterSignup(User newUser) {

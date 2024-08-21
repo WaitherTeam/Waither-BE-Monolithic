@@ -144,11 +144,11 @@ public class NotificationService {
 
         String region = weatherService.convertGpsToRegionName(locationDto.latitude(), locationDto.longitude());
 
-        saveOrUpdateLocation(currentUser.getEmail(), region);
+        saveOrUpdateLocation(currentUser, region);
 
     }
 
-    private void saveOrUpdateLocation(String email, String region) {
+    private void saveOrUpdateLocation(User currentUser, String region) {
         LocalDateTime fourHoursAgo = LocalDateTime.now().minusHours(4);
         notificationRecordRepository.findByEmail(currentUser.getEmail())
                 .ifPresentOrElse(
