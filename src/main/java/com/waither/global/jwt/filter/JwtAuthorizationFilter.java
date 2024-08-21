@@ -1,6 +1,6 @@
 package com.waither.global.jwt.filter;
 
-import com.waither.global.jwt.userdetails.PrincipalDetails;
+import com.waither.global.jwt.userdetails.CustomUserDetails;
 import com.waither.global.jwt.util.JwtUtil;
 import com.waither.global.utils.RedisUtil;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -69,7 +69,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         jwtUtil.validateToken(accessToken);
 
         //CustomUserDetail 객체 생성
-        PrincipalDetails userDetails = new PrincipalDetails(
+        CustomUserDetails userDetails = new CustomUserDetails(
                 jwtUtil.getEmail(accessToken),
                 null,
                 jwtUtil.getRoles(accessToken)

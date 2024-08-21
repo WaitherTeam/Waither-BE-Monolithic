@@ -45,7 +45,7 @@ public class User extends BaseEntity {
     @Column(name = "status", nullable = false)
     private UserStatus status;
 
-    // 권한
+    // 단일 권한
     @Column(name = "role", nullable = false)
     private String role; //ROLE_USER or ROLE_ADMIN
 
@@ -66,6 +66,13 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserMedian> UserMedian;
+
+    // CustomUserDetails를 위한 생성자
+    protected User(String email, String password, String role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 
     // 비밀번호 변경
     public void setPassword(String password) {

@@ -28,6 +28,19 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
 
+    private final String[] allowUrl = {
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/v3/api-docs/**",
+            "/login",
+            "/user/signup",
+            "/auth",
+            "/user/oauth",
+            "/user/emails/**",
+            "/password-check",
+            "/user/reissue"
+    };
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
@@ -66,9 +79,9 @@ public class SecurityConfig {
         // 경로별 인가
         http
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers(allowUrl).permitAll()
+                        .anyRequest().authenticated()
                 );
-
 
         // Jwt Filter (with login)
         JwtAuthenticationFilter loginFilter = new JwtAuthenticationFilter(

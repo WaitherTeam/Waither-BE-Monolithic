@@ -49,16 +49,16 @@ public class NotificationService {
 
 
     @Transactional(readOnly = true)
-    public List<NotificationResponse> getNotifications(Long userId, Pageable pageable) {
-        return notificationRepository.findAllByUserIdOrderByCreatedAtDesc(userId, pageable).toList();
+    public List<NotificationResponse> getNotifications(User currentUser, Pageable pageable) {
+        return notificationRepository.findAllByUserIdOrderByCreatedAtDesc(currentUser.getId(), pageable).toList();
     }
 
     @Transactional
-    public void deleteNotification(String email, String notificationId) {
+    public void deleteNotification(User currentUser, String notificationId) {
         Notification notification = notificationRepository.findById(notificationId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_404));
 
-        if (!notification.getUser().getEmail().equals(email)) {
+        if (!notification.getUser().getEmail().equals(currentUser.getEmail())) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_401);
         }
 
@@ -67,9 +67,9 @@ public class NotificationService {
     }
 
     @Transactional
-    public String sendGoOutAlarm(String email, LocationDto location) {
+    public String sendGoOutAlarm(User currentUser, LocationDto location) {
 
-        User user = userRepository.findByEmail(email).orElseThrow(
+        User user = userRepository.findByEmail(currentUser.getEmail()).orElseThrow(
                 () -> new CustomException(UserErrorCode.USER_NOT_FOUND));
 
         Setting setting = settingRepository.findByUser(user).orElseThrow(
@@ -136,21 +136,21 @@ public class NotificationService {
 
     //현재 위치 업데이트
     @Transactional
-    public void updateLocation(String email, LocationDto locationDto) {
+    public void updateLocation(User currentUser, LocationDto locationDto) {
 
-        log.info("[ Notification Service ]  email ---> {}", email);
+        log.info("[ Notification Service ]  currentUser.getEmail() ---> {}", currentUser.getEmail());
         log.info("[ Notification Service ]  현재 위치 위도 (latitude) ---> {}", locationDto.latitude());
         log.info("[ Notification Service ]  현재 위치 경도 (longitude) ---> {}", locationDto.longitude());
 
         String region = weatherService.convertGpsToRegionName(locationDto.latitude(), locationDto.longitude());
 
-        saveOrUpdateLocation(email, region);
+        saveOrUpdateLocation(currentUser.getEmail(), region);
 
     }
 
     private void saveOrUpdateLocation(String email, String region) {
         LocalDateTime fourHoursAgo = LocalDateTime.now().minusHours(4);
-        notificationRecordRepository.findByEmail(email)
+        notificationRecordRepository.findByEmail(currentUser.getEmail())
                 .ifPresentOrElse(
                         record -> {
                             //만약 지역이 변경됐다면 새로운 알림을 받기 위해 마지막 알림을 4시간 전으로 초기화
@@ -163,7 +163,7 @@ public class NotificationService {
                         //저장된 알림 레코드가 없을 경우
                         () -> notificationRecordRepository.save(
                                 NotificationRecord.builder()
-                                        .email(email)
+                                        .email(currentUser.getEmail())
                                         .region(region)
                                         .lastRainAlarmReceived(fourHoursAgo)
                                         .lastWindAlarmReceived(fourHoursAgo)

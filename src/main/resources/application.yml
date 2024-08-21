@@ -1,0 +1,61 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://waither.cbykekky6x7m.ap-northeast-2.rds.amazonaws.com:3306/waither
+    username: admin
+    password: waither1!
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+
+  jwt:
+    # HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용
+    secret: testSecretKey20240316testSecretKey20240316testSecretKey20240316
+    token:
+      access-expiration-time: 3600000
+      refresh-expiration-time: 86400000
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: com.waither
+    password: blxbcxruddrkhpkn
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+    auth-code-expiration-millis: 1800000  # 30 * 60 * 1000 == 30분
+
+kakao:
+  client_id: d123b0e487f515ba55f26453d6537fbc
+  redirect_uri: https://waither.shop/user/oauth/kakao/callback
+
+openapi:
+  forecast:
+    key: KQHOaZw02PSjk%2FsWvznYk0E1sTqn19fLdSywrASSpgFVYRaM9SqL1fyM8%2B7L6LVzpUPpvAIk5NN9xOaZTeiAlQ%3D%3D
+  accuweather:
+    #    key: r4lWv3DVT9NAScxKCx7e7ffQEhIOkSVU
+    key: 7PlDuTHKKxQz4rEBOFqbQPibcRvVu1aa

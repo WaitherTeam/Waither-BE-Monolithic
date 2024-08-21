@@ -3,7 +3,7 @@ package com.waither.domain.user.controller;
 import com.waither.domain.user.dto.request.UserReqDto;
 import com.waither.domain.user.entity.User;
 import com.waither.domain.user.service.commandService.UserService;
-import com.waither.global.annotation.AuthUser;
+import com.waither.global.jwt.annotation.CurrentUser;
 import com.waither.global.jwt.dto.JwtDto;
 import com.waither.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,7 +25,7 @@ public class UserController {
     // 회원가입
     @Operation(summary = "Sign Up", description = "회원가입")
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<String>> register(@Valid @RequestBody UserReqDto.SignUpRequestDto requestDto) {
+    public ResponseEntity<ApiResponse<String>> signup(@Valid @RequestBody UserReqDto.SignUpRequestDto requestDto) {
         userService.signup(requestDto);
         // SignUp 때만 201 Created 사용
         return ResponseEntity
@@ -52,7 +52,7 @@ public class UserController {
     // 이메일 인증하기
     @PostMapping("/emails/verifications")
     public ApiResponse<String> verificationEmail(@RequestBody UserReqDto.EmailVerificationDto verificationDto) {
-        userService.verifyCode(verificationDto.email(), verificationDto.authCode());
+        userService.verifyCode(verificationDto);
         return ApiResponse.onSuccess("이메일 인증에 성공했습니다.");
     }
 
@@ -67,34 +67,34 @@ public class UserController {
 
     // 닉네임 변경
     @PutMapping("/nickname")
-    public ApiResponse<String> updateNickname(@AuthUser String email,
+    public ApiResponse<String> updateNickname(@CurrentUser User currentUser,
                                               @RequestBody UserReqDto.NicknameDto nicknameDto) {
-        userService.updateNickname(email, nicknameDto.nickname());
+        userService.updateNickname(currentUser, nicknameDto);
         return ApiResponse.onSuccess("닉네임이 " + nicknameDto.nickname() + "로 바뀌었습니다.");
     }
 
     // 비밀번호 확인
     @PostMapping("/password-check")
-    public ApiResponse<String> passwordCheckEmail(@AuthUser String email,
+    public ApiResponse<String> passwordCheckEmail(@CurrentUser User currentUser,
                                                   @RequestBody UserReqDto.PasswordCheckDto passwordCheckDto) {
-            userService.checkPassword(email, passwordCheckDto.password());
+            userService.checkPassword(currentUser, passwordCheckDto);
         return ApiResponse.onSuccess("비밀번호가 확인되었습니다.");
     }
 
     // 비밀번호 변경
     @PutMapping("/password")
-    public ApiResponse<String> updatePassword(@AuthUser String email,
+    public ApiResponse<String> updatePassword(@CurrentUser User currentUser,
                                               @Valid @RequestBody UserReqDto.UpdatePasswordDto updatePasswordDto) {
-        userService.updatePassword(email, updatePasswordDto.password());
+        userService.updatePassword(currentUser, updatePasswordDto.password());
         return ApiResponse.onSuccess("비밀번호가 변경되었습니다.");
     }
 
 
     // Todo : soft delete로 변경 고려
     @DeleteMapping("/delete")
-    public ApiResponse<String> deleteUser(@AuthUser String email) {
-        userService.deleteUser(email);
-        return ApiResponse.onSuccess(email + "님의 계정이 성공적으로 탈퇴되었습니다.");
+    public ApiResponse<String> deleteUser(@CurrentUser User currentUser) {
+        userService.deleteUser(currentUser);
+        return ApiResponse.onSuccess(currentUser.getEmail() + "님의 계정이 성공적으로 탈퇴되었습니다.");
     }
 
 

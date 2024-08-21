@@ -20,50 +20,50 @@ public class SettingQueryService {
     private final UserRepository userRepository;
 
     // 사용자 맞춤 서비스 제공 조회
-    public SettingResDto.CustomDto getUserCustom(String email) {
-        User user = userRepository.findByEmail(email)
+    public SettingResDto.CustomDto getUserCustom(User currentUser) {
+        User user = userRepository.findByEmail(currentUser.getEmail())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         return SettingConverter.toCustomDto(user);
     }
 
     // 알림 설정 조회
-    public SettingResDto.NotificationDto getNotification(String email) {
-        User user = userRepository.findByEmail(email)
+    public SettingResDto.NotificationDto getNotification(User currentUser) {
+        User user = userRepository.findByEmail(currentUser.getEmail())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         return SettingConverter.toNotificationDto(user.getSetting());
     }
 
     // 메인 화면 날씨 상세 정보 조회
-    public SettingResDto.DisplayDto getDisplay(String email) {
-        User user = userRepository.findByEmail(email)
+    public SettingResDto.DisplayDto getDisplay(User currentUser) {
+        User user = userRepository.findByEmail(currentUser.getEmail())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         return SettingConverter.toDisplayDto(user.getSetting());
     }
 
     // 바람 세기 설정 조회
-    public SettingResDto.WindDto getWind(String email) {
-        User user = userRepository.findByEmail(email)
+    public SettingResDto.WindDto getWind(User currentUser) {
+        User user = userRepository.findByEmail(currentUser.getEmail())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         return SettingConverter.toWindDto(user.getSetting());
     }
 
     // 사용자 가중치 설정 조회
-    public SettingResDto.WeightDto getWeight(String email) {
-        User user = userRepository.findByEmail(email)
+    public SettingResDto.WeightDto getWeight(User currentUser) {
+        User user = userRepository.findByEmail(currentUser.getEmail())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         return SettingConverter.toWeightDto(user.getSetting());
     }
 
     // 직장 지역 설정 조회
-    public SettingResDto.RegionNameDto getRegion(String email){
-        User user = userRepository.findByEmail(email)
+    public SettingResDto.RegionNameDto getRegion(User currentUser){
+        User user = userRepository.findByEmail(currentUser.getEmail())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         return SettingConverter.toRegionNameDto(user.getSetting());
     }
 
     // 개인 정보 설정 조회
-    public SettingResDto.UserInfoDto getUserInfo(String email) {
-        User user = userRepository.findByEmail(email)
+    public SettingResDto.UserInfoDto getUserInfo(User currentUser) {
+        User user = userRepository.findByEmail(currentUser.getEmail())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         return SettingConverter.toUserInfoDto(user);
     }
