@@ -130,7 +130,6 @@ public class WeatherService {
 		String today = openApiUtil.convertLocalDateToString(now);
 
 		String location = GpsTransfer.convertGpsToRegionCode(latitude, longitude);
-
 		List<MsgOpenApiResponse.Item> items = openApiUtil.callAdvisoryApi(location, today);
 
 		String msg = items.get(0).getTitle();
@@ -159,31 +158,48 @@ public class WeatherService {
 	public MainWeatherResponse getMainWeather(double latitude, double longitude) {
 		LocalDateTime now = LocalDateTime.now();
 
-		List<Region> region = regionRepository.findRegionByLatAndLong(latitude, longitude);
-
-		if (region.isEmpty())
+		List<Region> regionList = regionRepository.findRegionByLatAndLong(latitude, longitude);
+		if (regionList.isEmpty())
 			throw new CustomException(WeatherErrorCode.REGION_NOT_FOUND);
 
-		String regionName = region.get(0).getRegionName();
+		Region region = regionList.get(0);
+		String regionName = region.getRegionName();
 
 		log.info("[Main - api] region : {}", regionName);
 
 		String expectedWeatherKey = regionName + "_" + convertLocalDateTimeToString(now);
 
 		LocalDateTime dailyWeatherBaseTime = convertLocalDateTimeToDailyWeatherTime(now.minusHours(1));
-
 		String dailyWeatherKey = regionName + "_" + convertLocalDateTimeToString(dailyWeatherBaseTime);
 
 		log.info("[Main - api] dailyWeatherKey : {}", dailyWeatherKey);
 		log.info("[Main - api] expectedWeatherKey : {}", expectedWeatherKey);
 
 		DailyWeather dailyWeather = dailyWeatherRepository.findById(dailyWeatherKey)
-			.orElseThrow(() -> new CustomException(WeatherErrorCode.DAILY_NOT_FOUND));
+			.orElseGet(() -> {
+				try {
+					String[] baseTime = convertLocalDateTimeToString(now.minusHours(2)).split("_");
+					createDailyWeather(region.getStartX(), region.getStartY(), baseTime[0], baseTime[1]);
+				} catch (URISyntaxException e) {
+					throw new CustomException(WeatherErrorCode.WEATHER_URI_ERROR);
+				}
+				return dailyWeatherRepository.findById(dailyWeatherKey)
+					.orElseThrow(() -> new CustomException(WeatherErrorCode.DAILY_NOT_FOUND));
+			});
 
 		log.info(regionName + "[Main - api] DailyWeather : {}", dailyWeather);
 
 		ExpectedWeather expectedWeather = expectedWeatherRepository.findById(expectedWeatherKey)
-			.orElseThrow(() -> new CustomException(WeatherErrorCode.EXPECTED_NOT_FOUND));
+			.orElseGet(() -> {
+				try {
+					String[] baseTime = convertLocalDateTimeToString(now.minusHours(1)).split("_");
+					createExpectedWeather(region.getStartX(), region.getStartY(), baseTime[0], baseTime[1]);
+				} catch (URISyntaxException e) {
+					throw new CustomException(WeatherErrorCode.WEATHER_URI_ERROR);
+				}
+				return expectedWeatherRepository.findById(expectedWeatherKey)
+					.orElseThrow(() -> new CustomException(WeatherErrorCode.EXPECTED_NOT_FOUND));
+			});
 
 		log.info(regionName + "[Main - api] ExpectedWeather : {}", expectedWeather);
 
