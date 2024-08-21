@@ -33,7 +33,4 @@ public class Notification extends BaseEntity {
         this.user = user;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        super.setCreatedAt(createdAt);
-    }
 }
