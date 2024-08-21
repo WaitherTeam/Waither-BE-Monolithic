@@ -38,7 +38,8 @@ public class SecurityConfig {
             "/user/oauth",
             "/user/emails/**",
             "/password-check",
-            "/user/reissue"
+            "/user/reissue",
+            "/health"
     };
 
     @Bean
