@@ -8,8 +8,11 @@ import com.waither.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
 
 @RequiredArgsConstructor
 @RequestMapping("/noti")
@@ -21,8 +24,9 @@ public class NotificationController {
 
     @Operation(summary = "Get notification", description = "알림 목록 조회하기")
     @GetMapping("")
-    public ApiResponse<?> getNotifications(@CurrentUser User currentUser) {
-        return ApiResponse.onSuccess(notificationService.getNotifications(currentUser));
+    public ApiResponse<?> getNotifications(@CurrentUser User currentUser,
+                                           @PageableDefault(page = 0, size = 10, sort = "createdAt") Pageable pageable) {
+        return ApiResponse.onSuccess(notificationService.getNotifications(currentUser, pageable));
     }
 
     @Operation(summary = "Delete notification", description = "알림 삭제하기")

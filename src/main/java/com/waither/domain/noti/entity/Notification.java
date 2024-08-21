@@ -5,11 +5,15 @@ import com.waither.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "notification")
+@Table(name = "notification", indexes = {
+        @Index(name = "idx_user_id_created_at", columnList = "user_id,created_at")
+})
 @Entity
 public class Notification extends BaseEntity {
 
@@ -27,5 +31,9 @@ public class Notification extends BaseEntity {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        super.setCreatedAt(createdAt);
     }
 }

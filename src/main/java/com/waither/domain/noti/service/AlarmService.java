@@ -27,7 +27,7 @@ public class AlarmService {
     private final UserRepository userRepository;
 
     public void updateToken(User currentUser, TokenDto tokenDto) {
-        redisUtil.save(currentUser.getEmail(), tokenDto.token());
+        redisUtil.save("firebase_"+currentUser.getEmail(), tokenDto.token());
     }
 
     public void sendSingleAlarmByUser(User user, String title, String message) {

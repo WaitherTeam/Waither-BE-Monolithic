@@ -8,14 +8,16 @@ import java.time.LocalDateTime;
 @Builder
 public record NotificationResponse(
         String id,
-        LocalDateTime time,
-        String message
+        LocalDateTime createdAt,
+        String title,
+        String content
 ) {
     public static NotificationResponse of(Notification notification) {
         return NotificationResponse.builder()
                 .id(notification.getId())
-                .time(notification.getCreatedAt())
-                .message(notification.getContent())
+                .createdAt(notification.getCreatedAt())
+                .title(notification.getTitle())
+                .content(notification.getContent())
                 .build();
     }
 }
