@@ -55,6 +55,7 @@ dependencies {
 
 	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
 
 	//JWT
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
@@ -79,6 +80,10 @@ dependencies {
 
 	// Spring batch
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
+
+	//JUnit + AssertJ
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+	testImplementation 'org.assertj:assertj-core:3.23.1'
 }
 
 tasks.named('test') {
