@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/noti")
 @RestController
-public class TokenContoller {
+public class TokenController {
 
     private final AlarmService alarmService;
 
