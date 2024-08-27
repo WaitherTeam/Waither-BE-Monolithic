@@ -13,7 +13,8 @@ public class SettingResDto {
     ) { }
 
     @Builder
-    public record RegionNameDto(
+    public record RegionDto(
+            boolean regionReport,
             String regionName
     ) { }
 

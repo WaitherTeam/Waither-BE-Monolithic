@@ -34,8 +34,9 @@ public class SettingConverter {
                 .build();
     }
 
-    public static SettingResDto.RegionNameDto toRegionNameDto(Setting setting) {
-        return SettingResDto.RegionNameDto.builder()
+    public static SettingResDto.RegionDto toRegionNameDto(Setting setting) {
+        return SettingResDto.RegionDto.builder()
+                .regionReport(setting.isRegionReport())
                 .regionName(setting.getUserRegion().getRegionName())
                 .build();
     }

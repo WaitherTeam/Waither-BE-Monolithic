@@ -55,7 +55,7 @@ public class SettingQueryService {
     }
 
     // 직장 지역 설정 조회
-    public SettingResDto.RegionNameDto getRegion(User currentUser){
+    public SettingResDto.RegionDto getRegion(User currentUser){
         User user = userRepository.findByEmail(currentUser.getEmail())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         return SettingConverter.toRegionNameDto(user.getSetting());

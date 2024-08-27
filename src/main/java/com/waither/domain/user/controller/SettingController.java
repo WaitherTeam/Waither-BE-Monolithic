@@ -29,11 +29,11 @@ public class SettingController {
 
     // 직장 지역 설정 조회
     @GetMapping("/region")
-    public ApiResponse<SettingResDto.RegionNameDto> getRegion(@CurrentUser User currentUser) {
+    public ApiResponse<SettingResDto.RegionDto> getRegion(@CurrentUser User currentUser) {
         return ApiResponse.onSuccess(settingQueryService.getRegion(currentUser));
     }
 
-//    // 알림 설정 조회
+    // 알림 설정 조회
     @GetMapping("/noti")
     public ApiResponse<SettingResDto.NotificationDto> getNotification(@CurrentUser User currentUser) {
         return ApiResponse.onSuccess(settingQueryService.getNotification(currentUser));
