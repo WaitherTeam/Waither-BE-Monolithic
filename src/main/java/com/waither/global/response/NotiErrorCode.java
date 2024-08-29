@@ -19,7 +19,11 @@ public enum NotiErrorCode implements BaseErrorCode {
 
 	//FirebaseError
 	FIREBASE_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "FB404", "푸시알림 토큰이 존재하지 않습니다."),
-	FIREBASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FB500", "Firebase 메세지 전송 오류가 발생했습니다.")
+	FIREBASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "FB500", "Firebase 메세지 전송 오류가 발생했습니다."),
+
+	//SQS Error
+	SQS_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "SQS500", "SQS 메세지 전송 과정에서 에러가 발생했습니다.")
+
 	;
 
 	private final HttpStatus httpStatus;

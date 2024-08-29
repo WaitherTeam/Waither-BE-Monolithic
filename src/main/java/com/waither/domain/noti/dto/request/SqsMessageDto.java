@@ -1,9 +1,9 @@
 package com.waither.domain.noti.dto.request;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
 
 public record SqsMessageDto(
-        String token,
+        List<String> tokens,
         String title,
         String content
 ) {

@@ -5,6 +5,8 @@ import com.waither.domain.noti.repository.redis.NotificationRecordRepository;
 import com.waither.domain.user.entity.Setting;
 import com.waither.domain.user.repository.SettingRepository;
 import com.waither.global.event.WeatherEvent;
+import com.waither.global.utils.AwsSqsUtils;
+import com.waither.global.utils.RedisUtil;
 import com.waither.global.utils.WeatherMessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +25,12 @@ import java.util.Optional;
 @Component
 public class NotificationEventListener {
 
-    private final AlarmService alarmService;
+    private final NotificationService notificationService;
+    private final NotificaitonRecordService notificaitonRecordService;
     private final NotificationRecordRepository notificationRecordRepository;
     private final SettingRepository settingRepository;
+    private final RedisUtil redisUtil;
+    private final AwsSqsUtils awsSqsUtils;
 
 
     /**
@@ -55,15 +60,18 @@ public class NotificationEventListener {
         getWindForecastExpression(windStrengthEvent, sb);
 
         log.info("[ 푸시 알림 ] 바람 세기 알림 전송");
+        List<String> tokens = emailsToSend.stream()
+                .map(email -> String.valueOf(redisUtil.get("fcm_" + email)))
+                .toList();
 
-        alarmService.sendAlarmsByEmails(emailsToSend,title, sb.toString());
+        //알림 전송
+        awsSqsUtils.sendMessages(tokens, title, sb.toString());
 
         //Record 알림 시간 초기화
-        emailsToSend
-                .forEach(email -> {
-                    Optional<NotificationRecord> notificationRecord = notificationRecordRepository.findByEmail(email);
-                    notificationRecord.ifPresent(NotificationRecord::initializeWindTime);
-                });
+        notificaitonRecordService.initializeWindAlarmTime(emailsToSend);
+
+        //알림 저장
+        notificationService.saveAll(emailsToSend, title, sb.toString());
     }
 
     private static StringBuilder getWindForecastExpression(WeatherEvent.WindStrength windStrengthEvent, StringBuilder sb) {
@@ -110,22 +118,22 @@ public class NotificationEventListener {
             return;
         }
 
-        getRainForecaseExpression(region, sb, predictionMessage);
+        getRainForecastExpression(region, sb, predictionMessage);
         //알림 보낼 사용자 이메일
 
 
         log.info("[ 푸시알림 ] 강수량 알림");
-        alarmService.sendAlarmsByEmails(emailsToSend, title, sb.toString());
+        List<String> tokens = emailsToSend.stream()
+                .map(email -> String.valueOf(redisUtil.get("fcm_" + email)))
+                .toList();
+        awsSqsUtils.sendMessages(tokens, title, sb.toString());
 
         //Record 알림 시간 초기화
-        emailsToSend
-                .forEach(email -> {
-                    Optional<NotificationRecord> notificationRecord = notificationRecordRepository.findByEmail(email);
-                    notificationRecord.ifPresent(NotificationRecord::initializeRainTime);
-                });
+        notificaitonRecordService.initializeRainAlarmTime(emailsToSend);
+        notificationService.saveAll(emailsToSend, title, sb.toString());
     }
 
-    private static StringBuilder getRainForecaseExpression(String region, StringBuilder sb, String predictionMessage) {
+    private static StringBuilder getRainForecastExpression(String region, StringBuilder sb, String predictionMessage) {
         return sb.append("현재 ").append(region).append(" 지역에 ").append(predictionMessage);
     }
 
@@ -166,7 +174,11 @@ public class NotificationEventListener {
         sb.append("[기상청 기상 특보] ").append(message);
 
         log.info("[ 푸시알림 ] 기상 특보 알림");
-        alarmService.sendAlarmsByEmails(emailsToSend, title, sb.toString());
+        List<String> tokens = emailsToSend.stream()
+                .map(email -> String.valueOf(redisUtil.get("fcm_" + email)))
+                .toList();
+        awsSqsUtils.sendMessages(tokens, title, sb.toString());
+        notificationService.saveAll(emailsToSend, title, sb.toString());
     }
 
 

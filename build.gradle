@@ -47,9 +47,6 @@ dependencies {
 	//Web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	//firebase
-	implementation 'com.google.firebase:firebase-admin:9.2.0'
-
 	//Webflux
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
@@ -79,6 +76,11 @@ dependencies {
 
 	// Spring batch
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
+
+	// SQS
+		implementation platform('software.amazon.awssdk:bom:2.21.20')
+		implementation 'software.amazon.awssdk:sqs'
+
 }
 
 tasks.named('test') {
