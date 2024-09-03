@@ -7,6 +7,8 @@ import com.waither.global.jwt.annotation.CurrentUser;
 import com.waither.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +22,14 @@ public class SurveyController {
 
     private final SurveyService surveyService;
     @PostMapping("/submit")
-    public ApiResponse<String> createSurvey(@CurrentUser User currentUser, @RequestBody SurveyReqDto.SurveyRequestDto surveyRequestDto) {
+    public ResponseEntity<ApiResponse<String>> createSurvey(@CurrentUser User currentUser, @RequestBody SurveyReqDto.SurveyRequestDto surveyRequestDto) {
         surveyService.createSurvey(currentUser, surveyRequestDto);
-        return ApiResponse.onSuccess("survey 생성완료");
+        // SignUp 때만 201 Created 사용
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(
+                        ApiResponse.onSuccess(HttpStatus.CREATED, "설문조사 생성완료.")
+                );
     }
 
 //    @PostMapping("/reset")
