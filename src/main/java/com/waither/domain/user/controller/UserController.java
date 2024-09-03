@@ -27,7 +27,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<String>> signup(@Valid @RequestBody UserReqDto.SignUpRequestDto requestDto) {
         userService.signup(requestDto);
-        // SignUp 때만 201 Created 사용
+        // 201 Created 사용
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(
