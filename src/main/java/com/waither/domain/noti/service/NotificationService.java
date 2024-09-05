@@ -1,6 +1,7 @@
 package com.waither.domain.noti.service;
 
 import com.waither.domain.noti.dto.request.LocationDto;
+import com.waither.domain.noti.dto.request.SqsMessageDto;
 import com.waither.domain.noti.dto.response.NotificationResponse;
 import com.waither.domain.noti.entity.Notification;
 import com.waither.domain.noti.entity.redis.NotificationRecord;
@@ -21,6 +22,7 @@ import com.waither.global.exception.CustomException;
 import com.waither.global.response.ErrorCode;
 import com.waither.global.response.NotiErrorCode;
 import com.waither.global.response.UserErrorCode;
+import com.waither.global.utils.AwsSqsUtils;
 import com.waither.global.utils.RedisUtil;
 import com.waither.global.utils.WeatherMessageUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -43,9 +48,10 @@ public class NotificationService {
     private final SettingRepository settingRepository;
     private final UserDataRepository userDataRepository;
     private final NotificationRecordRepository notificationRecordRepository;
-    private final AlarmService alarmService;
-
+    private final TokenService tokenService;
     private final WeatherService weatherService;
+    private final RedisUtil redisUtil;
+    private final AwsSqsUtils awsSqsUtils;
 
 
     @Transactional(readOnly = true)
@@ -125,7 +131,9 @@ public class NotificationService {
 
         //알림 보내기
         log.info("[ Notification Service ] Final Message ---> {}", sb.toString());
-        alarmService.sendSingleAlarmByUser(user, title, sb.toString());
+        String token = redisUtil.get("fcm_" + user.getEmail()).toString();
+        awsSqsUtils.sendMessage(new SqsMessageDto(List.of(token), title, sb.toString()));
+        save(user, title, sb.toString());
         return sb.toString();
     }
 
@@ -170,5 +178,33 @@ public class NotificationService {
                                         .build()
                         )
                 );
+    }
+
+    @Transactional
+    public void save(User user, String title, String message) {
+        notificationRepository.save(Notification.builder()
+                .user(user)
+                .title(title)
+                .content(message)
+                .build());
+    }
+
+    @Transactional
+    public void saveAll(List<String> emails, String title, String message) {
+        //Bulk 조회
+        List<User> users = userRepository.findAllByEmailIn(emails);
+        Map<String, User> userMap = users.stream()
+                .collect(Collectors.toMap(User::getEmail, Function.identity()));
+
+        List<Notification> notifications = emails.stream()
+                .map(email -> Notification.builder()
+                        .user(userMap.get(email))
+                        .title(title)
+                        .content(message)
+                        .build())
+                .toList();
+
+
+        notificationRepository.saveAll(notifications);
     }
 }

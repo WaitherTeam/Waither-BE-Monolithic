@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -23,6 +24,22 @@ public class NotificaitonRecordService {
     public void updateRainAlarm(String email) {
         Optional<NotificationRecord> notificationRecord = notificationRecordRepository.findByEmail(email);
         notificationRecord.ifPresent(record -> record.setLastRainAlarmReceived(LocalDateTime.now()));
+    }
+
+    public void initializeWindAlarmTime(List<String> emails) {
+        emails
+                .forEach(email -> {
+                    Optional<NotificationRecord> notificationRecord = notificationRecordRepository.findByEmail(email);
+                    notificationRecord.ifPresent(NotificationRecord::initializeWindTime);
+                });
+    }
+
+    public void initializeRainAlarmTime(List<String> emails) {
+        emails
+                .forEach(email -> {
+                    Optional<NotificationRecord> notificationRecord = notificationRecordRepository.findByEmail(email);
+                    notificationRecord.ifPresent(NotificationRecord::initializeRainTime);
+                });
     }
 
 
