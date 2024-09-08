@@ -1,7 +1,7 @@
 package com.waither.domain.user.service.commandService;
 
 import com.waither.global.exception.CustomException;
-import com.waither.global.response.UserErrorCode;
+import com.waither.domain.user.exception.UserErrorCode;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;

@@ -1,5 +1,6 @@
 package com.waither.domain.user.converter;
 
+import com.waither.domain.user.dto.request.OAuthReqDto;
 import com.waither.domain.user.dto.request.UserReqDto;
 import com.waither.domain.user.dto.response.KakaoResDto;
 import com.waither.domain.user.entity.User;
@@ -22,15 +23,14 @@ public class UserConverter {
                 .build();
     }
 
-    public static User toUser(KakaoResDto.UserInfoResponseDto userInfo) {
+    public static User toUser(OAuthReqDto.KakaoLoginReqDto kakaoLoginReqDto) {
         return User.builder()
-                .authId(userInfo.getId())
-                .nickname(userInfo.getKakaoAccount().getProfile().getNickName())
-                .email(userInfo.getKakaoAccount().getEmail())
+                .authId(kakaoLoginReqDto.authId())
+                .nickname(kakaoLoginReqDto.nickname())
+                .email(kakaoLoginReqDto.email())
                 .status(UserStatus.ACTIVE)
                 .custom(true)
                 .role("ROLE_USER")
                 .build();
     }
-
 }
