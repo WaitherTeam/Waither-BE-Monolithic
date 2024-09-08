@@ -3,7 +3,7 @@ package com.waither.domain.user.entity;
 import com.waither.domain.user.entity.enums.Season;
 import com.waither.global.entity.BaseEntity;
 import com.waither.global.exception.CustomException;
-import com.waither.global.response.UserErrorCode;
+import com.waither.domain.user.exception.UserErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 

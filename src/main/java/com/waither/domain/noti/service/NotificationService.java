@@ -21,7 +21,7 @@ import com.waither.domain.weather.service.WeatherService;
 import com.waither.global.exception.CustomException;
 import com.waither.global.response.ErrorCode;
 import com.waither.global.response.NotiErrorCode;
-import com.waither.global.response.UserErrorCode;
+import com.waither.domain.user.exception.UserErrorCode;
 import com.waither.global.utils.AwsSqsUtils;
 import com.waither.global.utils.RedisUtil;
 import com.waither.global.utils.WeatherMessageUtil;
