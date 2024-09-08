@@ -1,5 +1,6 @@
-package com.waither.global.response;
+package com.waither.domain.user.exception;
 
+import com.waither.global.response.ApiResponse;
 import com.waither.global.response.status.BaseErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +26,11 @@ public enum UserErrorCode implements BaseErrorCode {
 	CURRENT_PASSWORD_NOT_EQUAL(HttpStatus.BAD_REQUEST, "USER400_4", "현재 비밀번호가 일치하지 않습니다."),
 	CURRENT_PASSWORD_EQUAL(HttpStatus.BAD_REQUEST, "USER400_5", "변경하려는 비밀번호가 현재 비밀번호와 일치합니다."),
 	USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "USER400_6", "사용자가 이미 존재합니다."),
+
+	// 카카오 OAuth 관련 에러
+	INVALID_KAKAO_TOKEN(HttpStatus.UNAUTHORIZED, "OAUTH401_1", "유효하지 않은 카카오 액세스 토큰입니다."),
+	CONFLICT_EXISTING_EMAIL(HttpStatus.CONFLICT, "OAUTH409_1", "이미 이메일로 가입된 회원입니다."),
+	CONFLICT_OAUTH_ACCOUNT(HttpStatus.CONFLICT, "OAUTH409_2", "이미 가입된 카카오 계정입니다."),
 
 	// 세팅 관련 에러
 	INACTIVE_CUSTOM_SETTING(HttpStatus.BAD_REQUEST, "SETTING400_1"

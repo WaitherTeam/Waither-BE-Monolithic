@@ -5,7 +5,7 @@ import com.waither.domain.user.dto.response.SettingResDto;
 import com.waither.domain.user.entity.User;
 import com.waither.domain.user.repository.UserRepository;
 import com.waither.global.exception.CustomException;
-import com.waither.global.response.UserErrorCode;
+import com.waither.domain.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -6,7 +6,7 @@ import com.waither.domain.user.entity.UserData;
 import com.waither.domain.user.entity.UserMedian;
 import com.waither.domain.user.entity.enums.Season;
 import com.waither.global.exception.CustomException;
-import com.waither.global.response.UserErrorCode;
+import com.waither.domain.user.exception.UserErrorCode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

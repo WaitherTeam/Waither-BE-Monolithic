@@ -4,6 +4,7 @@ import com.waither.domain.user.converter.RegionConverter;
 import com.waither.domain.user.converter.SettingConverter;
 import com.waither.domain.user.converter.SurveyConverter;
 import com.waither.domain.user.converter.UserConverter;
+import com.waither.domain.user.dto.request.OAuthReqDto;
 import com.waither.domain.user.dto.request.UserReqDto;
 import com.waither.domain.user.dto.response.KakaoResDto;
 import com.waither.domain.user.entity.*;
@@ -14,7 +15,7 @@ import com.waither.global.exception.CustomException;
 import com.waither.global.jwt.dto.JwtDto;
 import com.waither.global.jwt.userdetails.CustomUserDetails;
 import com.waither.global.jwt.util.JwtUtil;
-import com.waither.global.response.UserErrorCode;
+import com.waither.domain.user.exception.UserErrorCode;
 import com.waither.global.utils.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,10 +65,11 @@ public class UserService {
     }
 
     // 회원가입 (카카오)
-    public void signupForKakao(KakaoResDto.UserInfoResponseDto userInfo) {
-        User newUser = UserConverter.toUser(userInfo);
+    public User signupForKakao(OAuthReqDto.KakaoLoginReqDto kakaoLoginReqDto) {
+        User newUser = UserConverter.toUser(kakaoLoginReqDto);
         User user = userRepository.save(newUser);
         processAfterSignup(user);
+        return user;
     }
 
     private void processAfterSignup(User newUser) {
@@ -97,14 +99,6 @@ public class UserService {
         newUser.setUserData(userDataList);
         newUser.setUserMedian(userMedianList);
         settingRepository.save(defaultSetting);
-    }
-
-    // OAuth용 토큰 발급
-    public JwtDto provideTokenForOAuth(String email) {
-        CustomUserDetails customUserDetails = new CustomUserDetails(email, null, "ROLE_USER");
-        return new JwtDto(
-                jwtUtil.createJwtAccessToken(customUserDetails),
-                jwtUtil.createJwtRefreshToken(customUserDetails));
     }
 
     // 재발급

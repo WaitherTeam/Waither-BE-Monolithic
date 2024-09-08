@@ -12,7 +12,7 @@ import com.waither.domain.user.repository.UserDataRepository;
 import com.waither.domain.user.repository.UserMedianRepository;
 import com.waither.domain.user.repository.UserRepository;
 import com.waither.global.exception.CustomException;
-import com.waither.global.response.UserErrorCode;
+import com.waither.domain.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
