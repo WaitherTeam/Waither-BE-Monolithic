@@ -177,8 +177,10 @@ public class WeatherService {
 
 		DailyWeather dailyWeather = dailyWeatherRepository.findById(dailyWeatherKey)
 			.orElseGet(() -> {
+				log.info("[Main - api] Daily Weather Error");
 				try {
-					String[] baseTime = convertLocalDateTimeToString(now.minusHours(2)).split("_");
+					log.info(String.valueOf(now.minusHours(3)));
+					String[] baseTime = convertLocalDateTimeToString(now.minusHours(3)).split("_");
 					createDailyWeather(region.getStartX(), region.getStartY(), baseTime[0], baseTime[1]);
 				} catch (URISyntaxException e) {
 					throw new CustomException(WeatherErrorCode.WEATHER_URI_ERROR);
@@ -191,6 +193,7 @@ public class WeatherService {
 
 		ExpectedWeather expectedWeather = expectedWeatherRepository.findById(expectedWeatherKey)
 			.orElseGet(() -> {
+				log.info("[Main - api] Expected Weather Error");
 				try {
 					String[] baseTime = convertLocalDateTimeToString(now.minusHours(1)).split("_");
 					createExpectedWeather(region.getStartX(), region.getStartY(), baseTime[0], baseTime[1]);
