@@ -13,13 +13,13 @@ import java.util.Collections;
 public class CustomUserDetails extends User implements UserDetails {
 
     //인가용 객체 생성자
-    public CustomUserDetails(String email, String password, String role){
-        super(email, password, role);
+    public CustomUserDetails(Long id, String email, String password, String role){
+        super(id, email, password, role);
     }
 
     //인증용 객체 생성자
     public CustomUserDetails(User user) {
-        super(user.getEmail(), user.getPassword(), user.getRole());
+        super(user.getId(), user.getEmail(), user.getPassword(), user.getRole());
     }
 
     // 해당 User의 권한을 리턴 하는 곳

@@ -18,7 +18,7 @@ public class OAuthController {
 
     private final OAuthService oAuthService;
 
-    @Operation(summary = "OAuth 로그인/회원가입")
+    @Operation(summary = "OAuth 로그인 & 회원가입")
     @PostMapping("/kakao/login")
     public ApiResponse<?> kakakoLogin(@RequestBody OAuthReqDto.KakaoLoginReqDto loginRequestDto) {
         JwtDto jwtDto = oAuthService.kakaoLogin(loginRequestDto);

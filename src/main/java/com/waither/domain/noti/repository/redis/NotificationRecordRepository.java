@@ -9,6 +9,4 @@ public interface NotificationRecordRepository extends CrudRepository<Notificatio
 
     Optional<NotificationRecord> findByEmail(String email);
 
-
-
 }

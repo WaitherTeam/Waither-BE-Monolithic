@@ -34,7 +34,7 @@ public class SettingService {
 
     // 사용자 맞춤 서비스 제공 설정 변경
     public void updateCustom(User currentUser, SettingReqDto.CustomDto customDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         user.setCustom(customDto.custom());
         userRepository.save(user);
@@ -42,7 +42,7 @@ public class SettingService {
 
     // 메인 화면 날씨 상세 정보 변경
     public void updateDisplay(User currentUser, SettingReqDto.DisplayDto displayDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         Setting setting = user.getSetting();
         if (displayDto.precipitation() != null) {
@@ -59,7 +59,7 @@ public class SettingService {
 
     // 알림 설정 변경 (요일 & 시간)
     public void updateOutAlertSet(User currentUser, SettingReqDto.OutAlertSetDto outAlertSetDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         Setting setting = user.getSetting();
         if (!setting.isOutAlert()) {
@@ -84,7 +84,7 @@ public class SettingService {
 
     // 외출 알림 설정 변경
     public void updateOutAlert(User currentUser, SettingReqDto.OutAlertDto outAlertDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         Setting setting = user.getSetting();
         setting.setOutAlert(outAlertDto.outAlert());
@@ -93,7 +93,7 @@ public class SettingService {
 
     // 기상 특보 알림 설정 변경
     public void updateClimateAlert(User currentUser, SettingReqDto.ClimateAlertDto climateAlertDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         Setting setting = user.getSetting();
         setting.setClimateAlert(climateAlertDto.climateAlert());
@@ -102,7 +102,7 @@ public class SettingService {
 
     // 사용자 맞춤 예보 설정 변경
     public void updateUserAlert(User currentUser, SettingReqDto.UserAlertDto userAlertDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         if (!user.isCustom()) {
             throw new CustomException(UserErrorCode.INACTIVE_CUSTOM_SETTING);
@@ -114,7 +114,7 @@ public class SettingService {
 
     // 강설 정보 알림 설정 변경
     public void updateSnowAlert(User currentUser, SettingReqDto.SnowAlertDto snowAlertDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         if (!user.isCustom()) {
             throw new CustomException(UserErrorCode.INACTIVE_CUSTOM_SETTING);
@@ -126,7 +126,7 @@ public class SettingService {
 
     // 바람 세기 알림 설정 변경
     public void updateWind(User currentUser, SettingReqDto.WindDto windDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         if (!user.isCustom()) {
             throw new CustomException(UserErrorCode.INACTIVE_CUSTOM_SETTING);
@@ -143,7 +143,7 @@ public class SettingService {
 
     // 직장 지역 레포트 알림 받기
     public void updateRegionReport(User currentUser, SettingReqDto.RegionReportDto regionReportDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         Setting setting = user.getSetting();
         setting.setRegionReport(regionReportDto.regionReport());
@@ -152,7 +152,7 @@ public class SettingService {
 
     // 직장 지역 설정
     public void updateRegion(User currentUser, SettingReqDto.RegionDto regionDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         UserRegion userRegion = user.getSetting().getUserRegion();
         userRegion.update(regionDto.regionName(), regionDto.longitude(), regionDto.latitude());
@@ -161,7 +161,7 @@ public class SettingService {
 
     // 사용자 가중치 설정
     public void updateWeight(User currentUser, SettingReqDto.WeightDto weightDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         Setting setting = user.getSetting();
         setting.setWeight(weightDto.weight());

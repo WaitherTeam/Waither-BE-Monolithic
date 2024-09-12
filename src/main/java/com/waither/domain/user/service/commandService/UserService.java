@@ -223,7 +223,7 @@ public class UserService {
 
     // 현재 비밀번호 체크
     public void checkPassword(User currentUser, UserReqDto.PasswordCheckDto passwordCheckDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         // 현재 비밀번호가 일치하는지 확인
         if (!passwordEncoder.matches(passwordCheckDto.password(), user.getPassword())) {
@@ -233,7 +233,7 @@ public class UserService {
 
     // 비밀번호 변경
     public void updatePassword(User currentUser, String newPassword) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         if (passwordEncoder.matches(newPassword, user.getPassword())) {
             throw new CustomException(UserErrorCode.CURRENT_PASSWORD_EQUAL);
@@ -243,7 +243,7 @@ public class UserService {
 
     // 닉네임 변경
     public void updateNickname(User currentUser, UserReqDto.NicknameDto nicknameDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         user.setNickname(nicknameDto.nickname());
         // Kafka 전송 -> 삭제
@@ -251,7 +251,7 @@ public class UserService {
 
     // 회원 삭제
     public void deleteUser(User currentUser){
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         userRepository.delete(user);
     }

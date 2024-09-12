@@ -45,7 +45,19 @@ public class JwtUtil {
         redisUtil = redis;
     }
 
-    // JWT 토큰을 입력으로 받아 토큰의 subject에서 사용자 이메일(email)을 추출
+    // JWT 토큰을 입력으로 받아 토큰의 subject에서 사용자 Id를 추출
+    public Long getId(String token) throws SignatureException {
+        validateToken(token);
+        String idString = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+        return Long.parseLong(idString);
+    }
+
+    // JWT 토큰을 입력으로 받아 토큰의 claim에서 사용자 이메일(email)을 추출
     public String getEmail(String token) throws SignatureException {
         validateToken(token);
         return Jwts.parser()
@@ -53,7 +65,7 @@ public class JwtUtil {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
-                .getSubject();
+                .get("email", String.class);
     }
 
     // JWT 토큰을 입력으로 받아 토큰의 claim에서 사용자 이름(roll)을 추출
@@ -78,7 +90,8 @@ public class JwtUtil {
                 .header()
                 .add("typ", "JWT")
                 .and()
-                .subject(customUserDetails.getUsername())
+                .subject(customUserDetails.getId().toString()) // ID를 subject로 사용
+                .claim("email", customUserDetails.getUsername()) // 이메일을 claim으로 추가 (선택사항)
                 .claim("role", authorities)
                 .issuedAt(Date.from(issuedAt))
                 .expiration(Date.from(expiration))
@@ -113,6 +126,7 @@ public class JwtUtil {
 
         // refreshToken에서 user 정보 뽑아서 새로 재 발금 (발급 시간, 유효 시간(reset)만 새로 적용)
         CustomUserDetails userDetails = new CustomUserDetails(
+                getId(refreshToken),
                 getEmail(refreshToken),
                 null,
                 getRoles(refreshToken)

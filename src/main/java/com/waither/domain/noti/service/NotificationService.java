@@ -64,7 +64,7 @@ public class NotificationService {
         Notification notification = notificationRepository.findById(notificationId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_404));
 
-        if (!notification.getUser().getEmail().equals(currentUser.getEmail())) {
+        if (!notification.getUser().getId().equals(currentUser.getId())) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_401);
         }
 
@@ -75,7 +75,7 @@ public class NotificationService {
     @Transactional
     public String sendGoOutAlarm(User currentUser, LocationDto location) {
 
-        User user = userRepository.findByEmail(currentUser.getEmail()).orElseThrow(
+        User user = userRepository.findById(currentUser.getId()).orElseThrow(
                 () -> new CustomException(UserErrorCode.USER_NOT_FOUND));
 
         Setting setting = settingRepository.findByUser(user).orElseThrow(
@@ -131,7 +131,7 @@ public class NotificationService {
 
         //알림 보내기
         log.info("[ Notification Service ] Final Message ---> {}", sb.toString());
-        String token = redisUtil.get("fcm_" + user.getEmail()).toString();
+        String token = redisUtil.get("fcm_" + user.getId()).toString();
         awsSqsUtils.sendMessage(new SqsMessageDto(List.of(token), title, sb.toString()));
         save(user, title, sb.toString());
         return sb.toString();
@@ -146,7 +146,7 @@ public class NotificationService {
     @Transactional
     public void updateLocation(User currentUser, LocationDto locationDto) {
 
-        log.info("[ Notification Service ]  currentUser.getEmail() ---> {}", currentUser.getEmail());
+        log.info("[ Notification Service ]  currentUser.getId() ---> {}", currentUser.getId());
         log.info("[ Notification Service ]  현재 위치 위도 (latitude) ---> {}", locationDto.latitude());
         log.info("[ Notification Service ]  현재 위치 경도 (longitude) ---> {}", locationDto.longitude());
 

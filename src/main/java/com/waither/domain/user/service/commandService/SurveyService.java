@@ -34,7 +34,7 @@ public class SurveyService {
 
     @Transactional
     public void createSurvey(User currentUser, SurveyReqDto.SurveyRequestDto surveyRequestDto) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
         Double temp = getTemp(surveyRequestDto.time());
         Survey survey = SurveyConverter.toSurvey(surveyRequestDto, temp, getCurrentSeason());
