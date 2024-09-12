@@ -43,7 +43,7 @@ public class OAuthService {
         User user = findOrCreateUser(kakaoLoginReqDto);
 
         // JWT 토큰 발급
-        return provideTokenForOAuth(user.getEmail());
+        return provideTokenForOAuth(user.getId(), user.getEmail());
     }
 
     public void validateKakaoToken(String accessToken) {
@@ -83,8 +83,8 @@ public class OAuthService {
         return user;
     }
 
-    public JwtDto provideTokenForOAuth(String email) {
-        CustomUserDetails customUserDetails = new CustomUserDetails(email, null, "ROLE_USER");
+    public JwtDto provideTokenForOAuth(Long id, String email) {
+        CustomUserDetails customUserDetails = new CustomUserDetails(id, email, null, "ROLE_USER");
         return new JwtDto(
                 jwtUtil.createJwtAccessToken(customUserDetails),
                 jwtUtil.createJwtRefreshToken(customUserDetails));

@@ -70,6 +70,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         //CustomUserDetail 객체 생성
         CustomUserDetails userDetails = new CustomUserDetails(
+                jwtUtil.getId(accessToken),
                 jwtUtil.getEmail(accessToken),
                 null,
                 jwtUtil.getRoles(accessToken)
