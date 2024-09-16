@@ -5,11 +5,12 @@
 
 > 나만의 기상 비서, Waither
 
-'Waither'는 사용자 개인 맞춤에 따른 날씨 정보 알림 서비스입니다.
+'Waither'는 사용자 개인 맞춤형 날씨 정보 알림 서비스입니다.
 
 <br><br><br><br>
 # ⛓️ Server Architecture
-![Waither Project Server Architecture - Monolithic](https://github.com/user-attachments/assets/7893273c-e0ea-4841-8b78-d8a66101e5de)
+![Waither Project Server Architecture - Monolithic](https://github.com/user-attachments/assets/e60a83a0-b434-4eb5-94d5-923d676bd4e3)
+
 
 <br><br>
 # 🔍 Using API
