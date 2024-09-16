@@ -19,19 +19,9 @@
 - <a href="https://www.data.go.kr/data/15085289/openapi.do">기상청_꽃가루농도위험지수 조회서비스(3.0)</a> <br>
 - <a href="https://www.data.go.kr/data/15000415/openapi.do">기상청_기상특보 조회서비스</a> <br>
 - <a href="https://www.data.go.kr/data/15043565/openapi.do">기상청_태풍정보 조회서비스</a> <br>
-<br><br>
-# 🗄️ Project Architecture
-```
-├── apiGateway-service # HTTP Gateway
-├── config-service # Configuration Management
-├── Eureka # Spring Cloud Eureka
-├── noti-service # Notification Service
-│       └── com.waither.notiService
-├── user-service  # User Service
-│       └── com.waither.userService
-├── weather-service
-│       └── com.waither.weatherService
-```
+- [Accuweather](https://developer.accuweather.com/)
+
+
 <br><br>
 #  ✏️Commit Message Convention
 | Emoticon | Commit Type | Desc |
