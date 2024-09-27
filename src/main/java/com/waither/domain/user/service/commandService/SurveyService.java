@@ -11,6 +11,7 @@ import com.waither.domain.user.repository.SurveyRepository;
 import com.waither.domain.user.repository.UserDataRepository;
 import com.waither.domain.user.repository.UserMedianRepository;
 import com.waither.domain.user.repository.UserRepository;
+import com.waither.domain.weather.service.WeatherService;
 import com.waither.global.exception.CustomException;
 import com.waither.domain.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class SurveyService {
 
+    private final WeatherService weatherService;
     private final SurveyRepository surveyRepository;
     private final UserDataRepository userDataRepository;
     private final UserMedianRepository userMedianRepository;
@@ -36,7 +38,7 @@ public class SurveyService {
     public void createSurvey(User currentUser, SurveyReqDto.SurveyRequestDto surveyRequestDto) {
         User user = userRepository.findById(currentUser.getId())
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
-        Double temp = getTemp(surveyRequestDto.time());
+        Double temp = getTemp(surveyRequestDto.latitude(), surveyRequestDto.longitude(), surveyRequestDto.time());
         Survey survey = SurveyConverter.toSurvey(surveyRequestDto, temp, getCurrentSeason());
         survey.setUser(user);
 
@@ -69,9 +71,8 @@ public class SurveyService {
         userMedianRepository.save(userMedian);
     }
 
-    // Todo: 해당 시각의 체감 온도 받아오기 (Weather-Service로 부터)
-    public Double getTemp(LocalDateTime time) {
-        return 18.0;
+    public Double getTemp(double latitude, double longitude, LocalDateTime time) {
+        return weatherService.getWindChill(latitude, longitude, time);
     }
 
     public static Season getCurrentSeason() {

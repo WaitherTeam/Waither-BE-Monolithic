@@ -258,4 +258,23 @@ public class WeatherService {
 	public String convertGpsToRegionName(double latitude, double longitude) {
 		return regionRepository.findRegionByLatAndLong(latitude, longitude).get(0).getRegionName();
 	}
+
+	public double calculateWindChill(double temp, double wind) {
+		if (temp > 10 || wind < 4.8) {
+			return temp;
+		}
+		return 13.12 + 0.6215 * temp - 11.37 * Math.pow(wind, 0.16) + 0.3965 * temp * Math.pow(wind, 0.16);
+	}
+
+	public double getWindChill(double latitude, double longitude, LocalDateTime baseTime) {
+		String regionName = convertGpsToRegionName(latitude, longitude);
+
+		LocalDateTime dailyWeatherBaseTime = convertLocalDateTimeToDailyWeatherTime(baseTime.minusHours(1));
+		String dailyWeatherKey = regionName + "_" + convertLocalDateTimeToString(dailyWeatherBaseTime);
+
+		DailyWeather dailyWeather = dailyWeatherRepository.findById(dailyWeatherKey)
+				.orElseThrow(() -> new CustomException(WeatherErrorCode.DAILY_NOT_FOUND));
+
+		return calculateWindChill(Double.valueOf(dailyWeather.getTmp()), Double.valueOf(dailyWeather.getWindDegree()));
+	}
 }
