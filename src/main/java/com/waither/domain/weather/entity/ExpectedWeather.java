@@ -11,7 +11,7 @@ import java.util.StringJoiner;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@RedisHash(value = "ExpectedWeather", timeToLive = 21600L) // 유효시간: 6시간
+@RedisHash(value = "ExpectedWeather", timeToLive = 129600L) // 유효시간: 36시간
 public class ExpectedWeather {
 
 	@Id

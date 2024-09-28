@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+import static com.waither.global.utils.WeatherMessageUtil.getCurrentSeason;
+
 @Slf4j
 @Service
 @Transactional
@@ -73,22 +75,6 @@ public class SurveyService {
 
     public Double getTemp(double latitude, double longitude, LocalDateTime time) {
         return weatherService.getWindChill(latitude, longitude, time);
-    }
-
-    public static Season getCurrentSeason() {
-        LocalDateTime now = LocalDateTime.now();
-        int month = now.getMonthValue();
-
-        // 봄, 가을 3, 4, 5, 9, 10, 11
-        if ((3 <= month && month <= 5) || (9 <= month && month <= 11)) {
-            return Season.SPRING_AUTUMN;
-        // 여름 6, 7, 8
-        } else if (6 <= month && month <= 8) {
-            return Season.SUMMER;
-        // 겨울 12, 1, 2
-        } else {
-            return Season.WINTER;
-        }
     }
 
     // 상위, 하위 온도가 해당 온도를 넘는가
