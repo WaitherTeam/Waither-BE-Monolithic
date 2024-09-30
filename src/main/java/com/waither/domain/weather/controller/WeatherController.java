@@ -1,8 +1,12 @@
 package com.waither.domain.weather.controller;
 
+import com.waither.domain.user.entity.User;
+import com.waither.domain.weather.dto.request.GetReportRequest;
 import com.waither.domain.weather.dto.request.GetWeatherRequest;
 import com.waither.domain.weather.dto.response.MainWeatherResponse;
+import com.waither.domain.weather.dto.response.ReportResponse;
 import com.waither.domain.weather.service.WeatherService;
+import com.waither.global.jwt.annotation.CurrentUser;
 import com.waither.global.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -39,5 +43,12 @@ public class WeatherController {
 	public ApiResponse<String> convertGpsToRegionName(@ModelAttribute @Valid GetWeatherRequest getWeatherRequest) {
 		return ApiResponse.onSuccess(
 			weatherService.convertGpsToRegionName(getWeatherRequest.latitude(), getWeatherRequest.longitude()));
+	}
+
+	@Operation(summary = "날씨 레포트 정보 가져오기")
+	@GetMapping("/report")
+	public ApiResponse<ReportResponse> getReport(@CurrentUser User currentUser, @ModelAttribute @Valid GetReportRequest getReportRequest) {
+		return ApiResponse.onSuccess(
+				weatherService.getReport(currentUser, getReportRequest.latitude(), getReportRequest.longitude()));
 	}
 }

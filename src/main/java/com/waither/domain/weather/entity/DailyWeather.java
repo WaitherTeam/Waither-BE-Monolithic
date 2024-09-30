@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.RedisHash;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@RedisHash(value = "DailyWeather", timeToLive = 28800L) // 유효시간: 8시간
+@RedisHash(value = "DailyWeather", timeToLive = 129600L) // 유효시간: 36시간
 public class DailyWeather {
 
 	@Id
