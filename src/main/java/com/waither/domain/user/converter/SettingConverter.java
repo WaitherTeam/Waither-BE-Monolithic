@@ -6,6 +6,7 @@ import com.waither.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -15,6 +16,7 @@ public class SettingConverter {
     public static Setting createSetting() {
         // Setting을 기본값으로 설정
         return Setting.builder()
+                .days(new HashSet<>())
                 .climateAlert(true)
                 .userAlert(true)
                 .snowAlert(true)
