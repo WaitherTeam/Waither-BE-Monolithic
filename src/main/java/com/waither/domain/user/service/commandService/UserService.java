@@ -55,10 +55,9 @@ public class UserService {
 
     // 회원가입
     public void signup(UserReqDto.SignUpRequestDto requestDto) {
-        // Todo : 다시 풀기
-//        if (!verifiedAccounts(requestDto.email())) {
-//            throw new CustomException(ErrorCode.INVALID_Account);
-//        }
+        if (!verifiedAccounts(requestDto.email())) {
+            throw new CustomException(UserErrorCode.INVALID_ACCOUNT);
+        }
         User newUser = UserConverter.toUser(requestDto, passwordEncoder);
         User user = userRepository.save(newUser);
         processAfterSignup(user);
