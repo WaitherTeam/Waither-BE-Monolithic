@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Our Service</title>
+</head>
+<body style="display: flex; flex-direction: column; background-color: #f5f5f5; padding: 40px 0; margin: 0; font-family: Verdana, Geneva, sans-serif;">
+<div style="max-width: 600px; margin: 0 auto; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
+    <div style="background-color: #5189F6; color: #fff; padding: 30px; text-align: center;">
+        <h1 style="font-size: 28px; margin: 0;">[ ☀️ Waither ☀️ ] 인증 번호 안내</h1>
+    </div>
+    <div style="padding: 30px; text-align: center;">
+        <p style="font-size: 16px; line-height: 0.8; color: #333; margin-bottom: 20px;">저희 서비스를 이용해주셔서 감사합니다!</p>
+        <p style="font-size: 16px; line-height: 0.8; color: #333; margin-bottom: 20px;">회원 가입을 완료하려면 먼저 이메일 주소를 인증해주세요.</p>
+        <p style="font-size: 16px; line-height: 0.8; color: #333; margin-bottom: 20px;">다음 인증코드를 30분 이내로 입력하세요.</p>
+        <div style="display: inline-block; background-color: #5189F6; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 4px; font-size: 16px; transition: background-color 0.3s ease;" th:text="${code}"></div>
+    </div>
+    <div style="background-color: #f5f5f5; line-height: 1.2; padding: 20px; text-align: left; font-size: 12px; color: #666;">
+        <p>본 이메일에는 회원가입을 위한 인증번호가 포함되어 있습니다. 타인에게 전달하지 마세요.</p>
+        <p>Copyright © 2024-2024, Waither all rights reserved.</p>
+        <p>웨이더 어플리케이션을 이용하는 것은 웨이더의 개인정보 보호정책에 동의한 것으로 간주합니다.</p>
+    </div>
+</div>
+</body>
+</html>

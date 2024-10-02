@@ -59,7 +59,6 @@ public class UserController {
     // 임시 비밀번호 발급
     @GetMapping("/emails/temporary-password")
     public ApiResponse<String> submitTemporaryPassword(@RequestParam String email) {
-            userService.checkUserExists(email);
             String tempPassword = userService.sendTempPassword(email);
             userService.changeToTempPassword(email, tempPassword);
             return ApiResponse.onSuccess("인증번호 전송에 성공했습니다.");

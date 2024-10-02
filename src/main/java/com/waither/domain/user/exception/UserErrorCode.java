@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 public enum UserErrorCode implements BaseErrorCode {
 
 	// 이메일 관련 에러
-	INVALID_CODE(HttpStatus.BAD_REQUEST, "EMAIL400_0", "인증번호가 일치하지 않아요. 다시 한 번 확인해주세요."),
+	INVALID_CODE(HttpStatus.BAD_REQUEST, "EMAIL400_0", "인증번호가 일치하지 않습니다. 다시 한 번 확인해주세요."),
 	INVALID_ACCOUNT(HttpStatus.BAD_REQUEST, "EMAIL400_1", "인증되지 않은 이메일입니다."),
 	AUTH_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "EMAIL400_2", "다시 인증 번호를 요청해주세요."),
 	VERIFIED_CHECK_EXPIRED(HttpStatus.BAD_REQUEST, "EMAIL400_3", "인증 완료 후 유효기간이 경과하였습니다. 다시 인증 번호를 요청해주세요."),
