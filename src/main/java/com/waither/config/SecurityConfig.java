@@ -32,7 +32,7 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/v3/api-docs/**",
-            "/login",
+            "/user/login",
             "/user/signup",
             "/user/oauth/kakao/login",
             "/user/emails/**",
@@ -98,7 +98,7 @@ public class SecurityConfig {
         // Logout Filter
         http
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
+                        .logoutUrl("/user/logout")
                         .addLogoutHandler(new JwtLogoutFilter(redisUtil, jwtUtil))
                         .logoutSuccessHandler(new CustomLogoutSuccessHandler())
                 );

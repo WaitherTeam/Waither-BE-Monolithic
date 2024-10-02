@@ -79,6 +79,12 @@ public class JwtUtil {
                 .get("role", String.class);
     }
 
+    // JWT 토큰의 페이로드에서 만료 시간을 검색, 밀리초 단위의 Long 값으로 반환
+    public long getExpTime(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration()
+                .getTime();
+    }
+
     // Token 발급
     public String tokenProvider(CustomUserDetails customUserDetails, Instant expiration) {
         Instant issuedAt = Instant.now();

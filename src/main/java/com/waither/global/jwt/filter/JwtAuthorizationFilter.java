@@ -1,6 +1,7 @@
 package com.waither.global.jwt.filter;
 
 import com.waither.global.jwt.userdetails.CustomUserDetails;
+import com.waither.global.jwt.util.HttpResponseUtil;
 import com.waither.global.jwt.util.JwtUtil;
 import com.waither.global.utils.RedisUtil;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -55,10 +56,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             authenticateAccessToken(accessToken);
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
-//            logger.warn("[ JwtAuthorizationFilter ] accessToken 이 만료되었습니다.");
-            response.setStatus(HttpStatus.UNAUTHORIZED.value()); // 401 return
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("만료된 토큰입니다.");
+            try {
+                HttpResponseUtil.setErrorResponse(response, HttpStatus.UNAUTHORIZED, "엑세스 토큰이 유효하지 않습니다.");
+            } catch (IOException ex) {
+                log.error("IOException occurred while setting error response: {}", ex.getMessage());
+            }
+            log.warn("[*] case : accessToken Expired");
         }
 
     }

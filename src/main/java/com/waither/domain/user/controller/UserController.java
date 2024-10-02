@@ -103,4 +103,11 @@ public class UserController {
     public ApiResponse<JwtDto> login(@RequestBody UserReqDto.LoginRequestDto loginRequestDto) {
         return null;
     }
+
+    //Swagger용 가짜 컨트롤러
+    @PostMapping("/logout")
+    public ApiResponse<?> logout() {
+        return null;
+    }
+
 }
