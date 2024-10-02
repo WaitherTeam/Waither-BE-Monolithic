@@ -122,6 +122,9 @@ public class UserService {
 
     // 임시 비밀번호 보내기
     public String sendTempPassword(String email) {
+        // 사용자 존재 여부 확인
+        checkUserExists(email);
+
         // 전송
         String tempPassword = this.createTemporaryPassword();
         String title = "[☀️Waither☀️] 임시 비밀번호 : {" + tempPassword + "}";
@@ -137,11 +140,6 @@ public class UserService {
         if (user.isPresent()) {
             throw new CustomException(UserErrorCode.USER_ALREADY_EXIST);
         }
-    }
-
-    public boolean isUserRegistered(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        return user.isPresent();
     }
 
     // 회원 존재하는 지 확인
@@ -216,7 +214,6 @@ public class UserService {
     public void changeToTempPassword(String email, String tempPassword) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
-        // 이메일로 사용자 조회
         user.setPassword(passwordEncoder.encode(tempPassword));
     }
 
