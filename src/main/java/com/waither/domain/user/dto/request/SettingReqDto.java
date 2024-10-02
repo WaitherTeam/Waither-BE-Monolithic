@@ -1,5 +1,7 @@
 package com.waither.domain.user.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.time.LocalTime;
 import java.util.List;
 
@@ -15,6 +17,8 @@ public class SettingReqDto {
 
     public record OutAlertSetDto(
             List<String> days,
+
+            @Schema(description = "외출 시간", example = "09:00:00", type = "string", pattern = "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")
             LocalTime outTime
     ) { }
 
