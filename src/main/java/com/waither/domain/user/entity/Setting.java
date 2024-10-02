@@ -33,7 +33,7 @@ public class Setting extends BaseEntity {
     private boolean outAlert;
 
     // 외출 시간
-    @Column(name = "outTime")
+    @Column(name = "outTime", nullable = false)
     private LocalTime outTime;
 
     // 월 ~ 금 알림

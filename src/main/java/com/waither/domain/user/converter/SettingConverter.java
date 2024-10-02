@@ -6,6 +6,7 @@ import com.waither.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class SettingConverter {
     public static Setting createSetting() {
         // Setting을 기본값으로 설정
         return Setting.builder()
+                .outAlert(true)
+                .outTime(LocalTime.of(9, 0))
                 .days(new HashSet<>())
                 .climateAlert(true)
                 .userAlert(true)
