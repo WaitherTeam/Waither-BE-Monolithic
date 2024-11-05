@@ -7,6 +7,8 @@
 
 'Waither'는 사용자 개인 맞춤형 날씨 정보 알림 서비스입니다.
 
+<a href="https://github.com/WaitherTeam/Waither-BE"> 리팩토링 전 레포 <a>
+
 <br><br><br><br>
 # ⛓️ Server Architecture
 ![Waither Project Server Architecture - Monolithic](https://github.com/user-attachments/assets/e60a83a0-b434-4eb5-94d5-923d676bd4e3)
