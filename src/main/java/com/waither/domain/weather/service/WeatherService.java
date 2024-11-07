@@ -612,7 +612,7 @@ public class WeatherService {
 	}
 
 	private void addTemperatureDifferenceAdvice(DailyWeather today, List<String> advices) {
-		float tempDiff = Float.valueOf(today.getTempMax()) - Float.valueOf(today.getTempMin());
+		float tempDiff = Float.parseFloat(today.getTempMax()) - Float.parseFloat(today.getTempMin());
 		//int tempDiff = Integer.parseInt(today.getTempMax()) - Integer.parseInt(today.getTempMin());
 		if (tempDiff > 10.0) {
 			advices.add("오늘은 일교차가 큽니다. 겉옷을 챙기세요.");
