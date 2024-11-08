@@ -7,7 +7,6 @@ import com.waither.domain.user.entity.User;
 import com.waither.domain.user.entity.UserMedian;
 import com.waither.domain.user.entity.enums.Season;
 import com.waither.domain.user.exception.UserErrorCode;
-import com.waither.domain.user.repository.SettingRepository;
 import com.waither.domain.user.repository.SurveyRepository;
 import com.waither.domain.user.repository.UserRepository;
 import com.waither.domain.weather.dto.response.MainWeatherResponse;
@@ -487,7 +486,7 @@ public class WeatherService {
 	private List<String> generateWeatherAdvices(UserMedian userMedian, Season season, DailyWeather today, DailyWeather yesterday) {
 		List<String> advices = new ArrayList<>();
 
-경		log.info("오늘 날씨 정보: tmp={}, tempMax={}, tempMin={}, pop={}, humidity={}, windVector={}, windDegree={}",
+		log.info("오늘 날씨 정보: tmp={}, tempMax={}, tempMin={}, pop={}, humidity={}, windVector={}, windDegree={}",
 				today.getTmp(), today.getTempMax(), today.getTempMin(), today.getPop(),
 				today.getHumidity(), today.getWindVector(), today.getWindDegree());
 
