@@ -31,6 +31,7 @@ public class SecurityConfig {
     private final String[] allowUrl = {
             "/swagger-ui/**",
             "/swagger-resources/**",
+            "/webjars/**",
             "/v3/api-docs/**",
             "/user/login",
             "/user/signup",

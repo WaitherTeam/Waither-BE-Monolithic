@@ -47,18 +47,18 @@ public class GlobalExceptionHandler {
     }
 
     // 그 외의 정의되지 않은 모든 예외 처리
-    @ExceptionHandler({Exception.class})
-    public ResponseEntity<ApiResponse<String>> handleAllException(Exception e) {
-        log.error("[WARNING] Internal Server Error : {} ", e.getMessage());
-        BaseErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR_500;
-        ApiResponse<String> errorResponse = ApiResponse.onFailure(
-                errorCode.getCode(),
-                errorCode.getMessage(),
-                e.getMessage()
-        );
-        return ResponseEntity
-                .status(errorCode.getHttpStatus())
-                .body(errorResponse);
-    }
+//    @ExceptionHandler({Exception.class})
+//    public ResponseEntity<ApiResponse<String>> handleAllException(Exception e) {
+//        log.error("[WARNING] Internal Server Error : {} ", e.getMessage());
+//        BaseErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR_500;
+//        ApiResponse<String> errorResponse = ApiResponse.onFailure(
+//                errorCode.getCode(),
+//                errorCode.getMessage(),
+//                e.getMessage()
+//        );
+//        return ResponseEntity
+//                .status(errorCode.getHttpStatus())
+//                .body(errorResponse);
+//    }
 
 }

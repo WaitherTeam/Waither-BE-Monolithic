@@ -630,6 +630,5 @@ public class WeatherService {
 		if (tempDiff > 8) {
 			advices.add("오늘은 일교차가 큽니다. 겉옷을 챙기세요.");
 		}
-	}
 
 }
