@@ -18,7 +18,7 @@ public class CalculateUtil {
     }
 
     // 열지수 공식
-    public static double calculateHeatIndex(int temp, int humidity) {
+    public static double calculateHeatIndex(double temp, double humidity) {
         return -8.784695 + 1.61139411 * temp + 2.338549 * humidity
                 - 0.14611605 * temp * humidity - 0.012308094 * temp * temp
                 - 0.016424828 * humidity * humidity + 0.002211732 * temp * temp * humidity
@@ -27,7 +27,7 @@ public class CalculateUtil {
     }
 
     // 불쾌지수 공식
-    public static double calculateDiscomfortIndex(int temp, int humidity) {
+    public static double calculateDiscomfortIndex(double temp, double humidity) {
         return 0.81 * temp + 0.01 * humidity * (0.99 * temp - 14.3) + 46.3;
     }
 

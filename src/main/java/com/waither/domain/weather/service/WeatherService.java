@@ -7,7 +7,6 @@ import com.waither.domain.user.entity.User;
 import com.waither.domain.user.entity.UserMedian;
 import com.waither.domain.user.entity.enums.Season;
 import com.waither.domain.user.exception.UserErrorCode;
-import com.waither.domain.user.repository.SettingRepository;
 import com.waither.domain.user.repository.SurveyRepository;
 import com.waither.domain.user.repository.UserRepository;
 import com.waither.domain.weather.dto.response.MainWeatherResponse;
@@ -487,10 +486,20 @@ public class WeatherService {
 	private List<String> generateWeatherAdvices(UserMedian userMedian, Season season, DailyWeather today, DailyWeather yesterday) {
 		List<String> advices = new ArrayList<>();
 
-		int todayTemp = Integer.parseInt(today.getTmp());
-		int todayPop = Integer.parseInt(today.getPop());
-		int todayHumidity = Integer.parseInt(today.getHumidity());
-		double todayWindSpeed = Double.parseDouble(today.getWindVector());
+		log.info("오늘 날씨 정보: tmp={}, tempMax={}, tempMin={}, pop={}, humidity={}, windVector={}, windDegree={}",
+				today.getTmp(), today.getTempMax(), today.getTempMin(), today.getPop(),
+				today.getHumidity(), today.getWindVector(), today.getWindDegree());
+
+		log.info("어제 날씨 정보: tmp={}, tempMax={}, tempMin={}, pop={}, humidity={}, windVector={}, windDegree={}",
+				yesterday.getTmp(), yesterday.getTempMax(), yesterday.getTempMin(), yesterday.getPop(),
+				yesterday.getHumidity(), yesterday.getWindVector(), yesterday.getWindDegree());
+
+		double todayTemp = Double.parseDouble(today.getTmp());
+		double todayPop = Double.parseDouble(today.getPop());
+		double todayHumidity = Double.parseDouble(today.getHumidity());
+		double todayWindSpeed = Double.parseDouble(today.getWindDegree());
+
+		log.info("현재 계절: season={}", season);
 
 		// 1. 사용자의 개인화된 체감 온도 레벨 분석
 		int personalizedTempLevel = getPersonalizedTemperatureLevel(todayTemp, userMedian);
@@ -518,7 +527,7 @@ public class WeatherService {
 	}
 
 	// "조언" 처음에 들어갈 [현재 기온이 사용자의 어떤 파트에 해당되는 지]
-	private int getPersonalizedTemperatureLevel(int todayTemp, UserMedian userMedian) {
+	private int getPersonalizedTemperatureLevel(double todayTemp, UserMedian userMedian) {
 		if (todayTemp < userMedian.getMedianOf1And2()) {
 			return 1;
 		} else if (todayTemp < userMedian.getMedianOf2And3()) {
@@ -532,7 +541,7 @@ public class WeatherService {
 		}
 	}
 
-	private void addPrecipitationAdvice(int todayPop, List<String> advices, Season season) {
+	private void addPrecipitationAdvice(double todayPop, List<String> advices, Season season) {
 		String precipitationMessage = season == Season.WINTER ? "오늘은 비 또는 눈이 올 확률이" : "오늘은 비가 올 확률이";
 		if (todayPop > 70) {
 			advices.add(precipitationMessage + " 매우 높습니다. 우산을 꼭 챙기세요.");
@@ -541,7 +550,7 @@ public class WeatherService {
 		}
 	}
 
-	private void addSeasonalAdvice(int todayTemp, int todayHumidity, double todayWindSpeed, Season season, List<String> advices) {
+	private void addSeasonalAdvice(double todayTemp, double todayHumidity, double todayWindSpeed, Season season, List<String> advices) {
 		switch (season) {
 			case SUMMER:
 				if (todayTemp > 30) {
@@ -551,6 +560,7 @@ public class WeatherService {
 				}
 
 				double heatIndex = CalculateUtil.calculateHeatIndex(todayTemp, todayHumidity);
+				log.info("여름 - 체감 온도: todayHumidity={}", todayHumidity);
 				if (heatIndex > 38) {
 					advices.add("체감 온도가 매우 높습니다. 더위에 주의하세요.");
 				} else if (heatIndex > 32) {
@@ -566,6 +576,7 @@ public class WeatherService {
 				}
 
 				double windChill = CalculateUtil.calculateWindChill(todayTemp, todayWindSpeed);
+				log.info("겨울 - 체감 온도: todayWindSpeed={}", todayWindSpeed);
 				if (windChill < 0) {
 					advices.add("체감 온도가 매우 낮습니다. 외출 시 충분한 보온이 필요합니다.");
 				}
@@ -579,6 +590,7 @@ public class WeatherService {
 				}
 
 				double discomfortIndex = CalculateUtil.calculateDiscomfortIndex(todayTemp, todayHumidity);
+				log.info("봄/가을 - 불쾌 지수: discomfortIndex={}", discomfortIndex);
 				if (discomfortIndex > 80) {
 					advices.add("불쾌지수가 높습니다. 외출 시 주의하세요.");
 				}
@@ -586,7 +598,7 @@ public class WeatherService {
 		}
 	}
 
-	private void addHumidityAdvice(int todayHumidity, List<String> advices) {
+	private void addHumidityAdvice(double todayHumidity, List<String> advices) {
 		if (todayHumidity > 60) {
 			advices.add("오늘은 습도가 매우 높습니다. 불쾌지수가 높을 수 있으니 주의하세요.");
 		} else if (todayHumidity < 40) {
@@ -602,8 +614,8 @@ public class WeatherService {
 		}
 	}
 
-	private void addComparisonAdvice(int todayTemp, DailyWeather yesterday, List<String> advices) {
-		int yesterdayTemp = Integer.parseInt(yesterday.getTmp());
+	private void addComparisonAdvice(double todayTemp, DailyWeather yesterday, List<String> advices) {
+		double yesterdayTemp = Double.parseDouble(yesterday.getTmp());
 		if (todayTemp - yesterdayTemp > 5) {
 			advices.add("어제보다 기온이 많이 올랐습니다. 옷차림에 유의하세요.");
 		} else if (yesterdayTemp - todayTemp > 5) {
@@ -612,11 +624,11 @@ public class WeatherService {
 	}
 
 	private void addTemperatureDifferenceAdvice(DailyWeather today, List<String> advices) {
-		float tempDiff = Float.parseFloat(today.getTempMax()) - Float.parseFloat(today.getTempMin());
-		//int tempDiff = Integer.parseInt(today.getTempMax()) - Integer.parseInt(today.getTempMin());
-		if (tempDiff > 10.0) {
+		double tempMax = Double.parseDouble(today.getTempMax());
+		double tempMin = Double.parseDouble(today.getTempMin());
+		double tempDiff = tempMax - tempMin;
+		if (tempDiff > 8) {
 			advices.add("오늘은 일교차가 큽니다. 겉옷을 챙기세요.");
 		}
-	}
 
 }
