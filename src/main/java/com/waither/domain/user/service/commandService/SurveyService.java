@@ -1,7 +1,9 @@
 package com.waither.domain.user.service.commandService;
 
+import com.waither.domain.noti.enums.Expressions;
 import com.waither.domain.user.converter.SurveyConverter;
 import com.waither.domain.user.dto.request.SurveyReqDto;
+import com.waither.domain.user.dto.response.SurveyResDto;
 import com.waither.domain.user.entity.Survey;
 import com.waither.domain.user.entity.User;
 import com.waither.domain.user.entity.UserData;
@@ -14,12 +16,15 @@ import com.waither.domain.user.repository.UserRepository;
 import com.waither.domain.weather.service.WeatherService;
 import com.waither.global.exception.CustomException;
 import com.waither.domain.user.exception.UserErrorCode;
+import com.waither.global.utils.WeatherMessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.waither.global.utils.WeatherMessageUtil.getCurrentSeason;
 
@@ -35,6 +40,29 @@ public class SurveyService {
     private final UserMedianRepository userMedianRepository;
     private final UserRepository userRepository;
 
+    @Transactional
+    public SurveyResDto.ExpressionListDto getSeasonalExpressions() {
+        Season currentSeason = WeatherMessageUtil.getCurrentSeason();
+        Expressions[] expressions;
+
+        switch (currentSeason) {
+            case WINTER:
+                expressions = WeatherMessageUtil.winterExpressions;
+                break;
+            case SUMMER:
+                expressions = WeatherMessageUtil.summerExpressions;
+                break;
+            default:  // SPRING_AUTUMN
+                expressions = WeatherMessageUtil.springAndAutumnExpressions;
+                break;
+        }
+
+        List<String> expressionList = Arrays.stream(expressions)
+                .map(Expressions::getExpression)
+                .toList();
+
+        return SurveyConverter.toExpressionListDto(expressionList);
+    }
 
     @Transactional
     public void createSurvey(User currentUser, SurveyReqDto.SurveyRequestDto surveyRequestDto) {

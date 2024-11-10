@@ -1,6 +1,7 @@
 package com.waither.domain.user.converter;
 
 import com.waither.domain.user.dto.request.SurveyReqDto;
+import com.waither.domain.user.dto.response.SurveyResDto;
 import com.waither.domain.user.entity.Survey;
 import com.waither.domain.user.entity.UserData;
 import com.waither.domain.user.entity.UserMedian;
@@ -10,11 +11,19 @@ import com.waither.domain.user.exception.UserErrorCode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 import static com.waither.global.utils.CalculateUtil.calculateMedian;
 
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SurveyConverter {
+
+    public static SurveyResDto.ExpressionListDto toExpressionListDto(List<String> expressions) {
+        return SurveyResDto.ExpressionListDto.builder()
+                .expressions(expressions)
+                .build();
+    }
 
     // UserData 기본값으로 설정
     public static UserData createUserData(Season season) {
