@@ -13,7 +13,7 @@ public class UserReqDto {
             String email,
 
             @NotBlank(message = "[ERROR] 비밀번호 입력은 필수 입니다.")
-            @Schema(description = "email", example = "test1234!!")
+            @Schema(description = "password", example = "test1234!!")
             @Size(min = 8, message = "[ERROR] 비밀번호는 최소 8자리 이이어야 합니다.")
             @Pattern(regexp = "^(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*]).{8,64}$", message = "[ERROR] 비밀번호는 8자 이상, 64자 이하이며 특수문자 한 개를 포함해야 합니다.")
             String password
