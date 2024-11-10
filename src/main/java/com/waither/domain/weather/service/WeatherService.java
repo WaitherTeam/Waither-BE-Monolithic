@@ -27,6 +27,7 @@ import com.waither.global.event.WeatherEvent;
 import com.waither.global.exception.CustomException;
 import com.waither.global.response.WeatherErrorCode;
 import com.waither.global.utils.CalculateUtil;
+import com.waither.global.utils.WeatherMessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -502,8 +503,10 @@ public class WeatherService {
 		log.info("현재 계절: season={}", season);
 
 		// 1. 사용자의 개인화된 체감 온도 레벨 분석
-		int personalizedTempLevel = getPersonalizedTemperatureLevel(todayTemp, userMedian);
-		advices.add(String.valueOf(personalizedTempLevel));
+		String personalizedTempAdvice = getPersonalizedTemperatureAdvice(todayTemp, userMedian);
+		if (personalizedTempAdvice != null) {
+			advices.add(personalizedTempAdvice);
+		}
 
 		// 2. 강수 확률에 대한 조언 메소드
 		addPrecipitationAdvice(todayPop, advices, season);
@@ -527,18 +530,9 @@ public class WeatherService {
 	}
 
 	// "조언" 처음에 들어갈 [현재 기온이 사용자의 어떤 파트에 해당되는 지]
-	private int getPersonalizedTemperatureLevel(double todayTemp, UserMedian userMedian) {
-		if (todayTemp < userMedian.getMedianOf1And2()) {
-			return 1;
-		} else if (todayTemp < userMedian.getMedianOf2And3()) {
-			return 2;
-		} else if (todayTemp < userMedian.getMedianOf3And4()) {
-			return 3;
-		} else if (todayTemp < userMedian.getMedianOf4And5()) {
-			return 4;
-		} else {
-			return 5;
-		}
+	private String getPersonalizedTemperatureAdvice(double todayTemp, UserMedian userMedian) {
+		Season currentSeason = WeatherMessageUtil.getCurrentSeason();
+		return WeatherMessageUtil.createUserDataMessage(userMedian, todayTemp, 0);  // weight는 0으로 설정
 	}
 
 	private void addPrecipitationAdvice(double todayPop, List<String> advices, Season season) {
