@@ -536,9 +536,9 @@ public class WeatherService {
 	}
 
 	private void addPrecipitationAdvice(double todayPop, List<String> advices, Season season) {
-		String precipitationMessage = season == Season.WINTER ? "오늘은 비 또는 눈이 올 확률이" : "오늘은 비가 올 확률이";
+		String precipitationMessage = season == Season.WINTER ? "비/눈이 올 확률이" : "비가 올 확률이";
 		if (todayPop > 70) {
-			advices.add(precipitationMessage + " 매우 높습니다. 우산을 꼭 챙기세요.");
+			advices.add(precipitationMessage + " 매우 높습니다. 우산을 챙기세요.");
 		} else if (todayPop > 50) {
 			advices.add(precipitationMessage + " 있습니다. 우산을 챙기세요.");
 		}
@@ -548,45 +548,43 @@ public class WeatherService {
 		switch (season) {
 			case SUMMER:
 				if (todayTemp > 30) {
-					advices.add("오늘은 매우 더운 날씨입니다. 야외 활동을 자제하고 수분 섭취를 늘리세요.");
+					advices.add("매우 더워요! 야외 활동을 자제해주세요.");
 				} else if (todayTemp > 25) {
-					advices.add("오늘은 더운 날씨입니다. 시원하게 입으세요.");
+					advices.add("날씨가 덥습니다. 시원하게 입으세요.");
 				}
 
 				double heatIndex = CalculateUtil.calculateHeatIndex(todayTemp, todayHumidity);
 				log.info("여름 - 체감 온도: todayHumidity={}", todayHumidity);
-				if (heatIndex > 38) {
-					advices.add("체감 온도가 매우 높습니다. 더위에 주의하세요.");
-				} else if (heatIndex > 32) {
-					advices.add("체감 온도가 높습니다. 충분한 수분 섭취가 필요합니다.");
+				if (heatIndex > 34) {
+					advices.add("실제 기온보다 더 덥게 느껴질 수 있습니다.");
 				}
 				break;
 
 			case WINTER:
 				if (todayTemp < 0) {
-					advices.add("오늘은 매우 추운 날씨입니다. 보온에 신경 쓰고, 체온을 유지하세요.");
+					advices.add("매우 추운 날씨입니다! 보온에 신경쓰세요.");
 				} else if (todayTemp < 10) {
-					advices.add("오늘은 쌀쌀합니다. 따뜻하게 입으세요.");
+					advices.add("쌀쌀한 날씨입니다. 따뜻하게 입으세요.");
 				}
 
 				double windChill = CalculateUtil.calculateWindChill(todayTemp, todayWindSpeed);
 				log.info("겨울 - 체감 온도: todayWindSpeed={}", todayWindSpeed);
 				if (windChill < 0) {
-					advices.add("체감 온도가 매우 낮습니다. 외출 시 충분한 보온이 필요합니다.");
+					advices.add("실제 기온보다 더 춥게 느껴질 수 있습니다.");
 				}
 				break;
 
 			case SPRING_AUTUMN:
 				if (todayTemp > 25) {
-					advices.add("오늘은 다소 더운 날씨입니다. 시원하게 입으세요.");
+					advices.add("다소 더운 날씨입니다. 시원하게 입으세요.");
 				} else if (todayTemp < 10) {
-					advices.add("오늘은 쌀쌀한 날씨입니다. 겉옷을 챙기세요.");
+					advices.add("쌀쌀한 날씨입니다. 겉옷을 챙기세요.");
 				}
 
 				double discomfortIndex = CalculateUtil.calculateDiscomfortIndex(todayTemp, todayHumidity);
 				log.info("봄/가을 - 불쾌 지수: discomfortIndex={}", discomfortIndex);
 				if (discomfortIndex > 80) {
-					advices.add("불쾌지수가 높습니다. 외출 시 주의하세요.");
+					advices.add("오늘은 불쾌지수가 매우 높을 예정입니다.");
 				}
 				break;
 		}
@@ -594,26 +592,26 @@ public class WeatherService {
 
 	private void addHumidityAdvice(double todayHumidity, List<String> advices) {
 		if (todayHumidity > 60) {
-			advices.add("오늘은 습도가 매우 높습니다. 불쾌지수가 높을 수 있으니 주의하세요.");
-		} else if (todayHumidity < 40) {
-			advices.add("오늘은 건조합니다. 충분한 수분 섭취를 권장합니다.");
+			advices.add("오늘은 습도가 매우 높습니다.");
+		} else if (todayHumidity < 35) {
+			advices.add("건조할 수 있으니 충분한 수분 섭취를 권장합니다.");
 		}
 	}
 
 	private void addWindAdvice(double todayWindSpeed, List<String> advices) {
 		if (todayWindSpeed > 12) {
-			advices.add("오늘은 매우 강한 바람이 불고 있습니다. 외출 시 주의하세요.");
+			advices.add("매우 강한 바람이 붑니다. 외출 시 주의하세요.");
 		} else if (todayWindSpeed > 7) {
-			advices.add("오늘은 바람이 강하게 붑니다. 외출 시 주의하세요.");
+			advices.add("바람이 강하게 붑니다. 외출 시 주의하세요.");
 		}
 	}
 
 	private void addComparisonAdvice(double todayTemp, DailyWeather yesterday, List<String> advices) {
 		double yesterdayTemp = Double.parseDouble(yesterday.getTmp());
 		if (todayTemp - yesterdayTemp > 5) {
-			advices.add("어제보다 기온이 많이 올랐습니다. 옷차림에 유의하세요.");
+			advices.add("어제보다 기온이 많이 올랐습니다.");
 		} else if (yesterdayTemp - todayTemp > 5) {
-			advices.add("어제보다 기온이 많이 떨어졌습니다. 건강에 유의하세요.");
+			advices.add("어제보다 기온이 많이 떨어졌습니다.");
 		}
 	}
 
