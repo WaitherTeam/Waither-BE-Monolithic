@@ -16,8 +16,8 @@ import static com.waither.domain.noti.enums.Expressions.*;
 @Component
 public class WeatherMessageUtil {
 
-    public static Expressions[] winterExpressions = {WARM, GOOD, LITTLE_COLD, COLD, VERY_COLD };
-    public static Expressions[] springAndAutumnExpressions = {HOT, LITTLE_HOT, GOOD, LITTLE_COLD, COLD};
+    public static Expressions[] winterExpressions = {VERY_COLD, COLD, LITTLE_COLD, GOOD, WARM};
+    public static Expressions[] springAndAutumnExpressions = {COLD, LITTLE_COLD, GOOD, HOT, LITTLE_HOT,  };
     public static Expressions[] summerExpressions = {COOL, GOOD, LITTLE_HOT, HOT, VERY_HOT};
     public static double WEIGHT_ADJUSTMENT_FACTOR = 0.5;
 
