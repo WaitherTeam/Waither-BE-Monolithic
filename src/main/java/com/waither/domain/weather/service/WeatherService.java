@@ -23,6 +23,7 @@ import com.waither.domain.weather.repository.DailyWeatherRepository;
 import com.waither.domain.weather.repository.ExpectedWeatherRepository;
 import com.waither.domain.weather.repository.RegionRepository;
 import com.waither.domain.weather.repository.WeatherAdvisoryRepository;
+import com.waither.global.event.OutboxEventService;
 import com.waither.global.event.WeatherEvent;
 import com.waither.global.exception.CustomException;
 import com.waither.global.response.WeatherErrorCode;
@@ -39,7 +40,6 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,7 +58,7 @@ public class WeatherService {
 	private final RegionRepository regionRepository;
 	private final SurveyRepository surveyRepository;
 	private final UserRepository userRepository;
-	private final ApplicationEventPublisher applicationEventPublisher;
+	private final OutboxEventService outboxEventService;
 
 
 	public void createExpectedWeather(
@@ -91,8 +91,8 @@ public class WeatherService {
 			.expectedSky(expectedSkyList)
 			.build();
 
-		//이벤트 전송
-		applicationEventPublisher.publishEvent(new WeatherEvent.ExpectRain(regionName, expectedRainList));
+		//이벤트 저장
+		outboxEventService.saveEvent(new WeatherEvent.ExpectRain(regionName, expectedRainList));
 
 		ExpectedWeather save = expectedWeatherRepository.save(expectedWeather);
 		log.info("[*] 예상 기후 : {}", save);
@@ -134,8 +134,8 @@ public class WeatherService {
 			.windDegree(wsd)
 			.build();
 
-		//이벤트 전송
-		applicationEventPublisher.publishEvent(new WeatherEvent.WindStrength(regionName, Double.valueOf(wsd)));
+		//이벤트 저장
+			outboxEventService.saveEvent(new WeatherEvent.WindStrength(regionName, Double.valueOf(wsd)));
 
 		DailyWeather save = dailyWeatherRepository.save(dailyWeather);
 		log.info("[*] 하루 온도 : {}", save);
@@ -157,8 +157,8 @@ public class WeatherService {
 			.message(msg)
 			.build();
 
-		//이벤트 전송
-		applicationEventPublisher.publishEvent(new WeatherEvent.WeatherWarning(location, msg));
+		//이벤트 저장
+		outboxEventService.saveEvent(new WeatherEvent.WeatherWarning(location, msg));
 
 		WeatherAdvisory save = weatherAdvisoryRepository.save(weatherAdvisory);
 		log.info("[*] 기상 특보 : {}", save);
