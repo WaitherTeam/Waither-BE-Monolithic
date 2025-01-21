@@ -21,10 +21,8 @@ import java.time.LocalDateTime;
 public class OutBoxEvent extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    private String eventId;
 
     private EventType eventType;
 
@@ -62,11 +60,10 @@ public class OutBoxEvent extends BaseEntity {
 
     public static OutBoxEvent of(WeatherEventAbstract event, String payload) throws JsonProcessingException {
         return OutBoxEvent.builder()
-                .eventId(event.getEventId())
                 .eventType(event.getEventType())
-                .payload(event.getPayload())
                 .status(OutboxStatus.CREATED) //초기 상태는 생성됨
                 .retryCount(0) //초기 재시도 횟수는 0
+                .payload(payload)
                 .build();
     }
 }

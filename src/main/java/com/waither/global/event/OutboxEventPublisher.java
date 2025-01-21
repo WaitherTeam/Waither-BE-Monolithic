@@ -1,6 +1,5 @@
 package com.waither.global.event;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.waither.global.event.entity.OutBoxEvent;
 import com.waither.global.event.entity.OutboxStatus;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,7 @@ public class OutboxEventPublisher {
     private final ApplicationEventPublisher eventPublisher;
     private final EventConverter eventConverter;
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 10000)
     @Transactional
     public void publishEvents() {
         // 처리 타임아웃 시간
@@ -44,20 +43,24 @@ public class OutboxEventPublisher {
         );
 
         for (OutBoxEvent event : events) {
-            log.info("[Outbox Event Publisher] Publishing event --> {}", event.getEventId());
+            log.info("[Outbox Event Publisher] Publishing event --> {}", event.getId());
             try {
+                //이벤트 클래스 변환
                 WeatherEventAbstract weatherEvent = eventConverter.fromJson(event.getPayload(), event.getEventType().getEventClass());
 
+                //처리 시간 기록
                 event.setLastProcessedAt(LocalDateTime.now());
+                //이미 실패한 이벤트라면 재시도 횟수 +1
                 if (event.getStatus() == OutboxStatus.FAILED) {
                     event.increaseRetryCount();
                 }
 
+                //이벤트 발행
                 eventPublisher.publishEvent(weatherEvent);
-                log.info("[Outbox Event Publisher] Publishing success --> {}", event.getEventId());
+                log.info("[Outbox Event Publisher] Publishing success --> {}", event.getId());
                 event.setStatus(OutboxStatus.PUBLISHED);
-                outboxEventRepository.save(event);
             } catch (Exception e) {
+                e.printStackTrace();
                 handlePublishingFailure(event, e);
             }
         }
@@ -65,10 +68,10 @@ public class OutboxEventPublisher {
 
 
     private void handlePublishingFailure(OutBoxEvent event, Exception e) {
-        log.info("[Outbox Event Publisher] Publishing Failed --> {}", event.getEventId());
-        log.info("[Outbox Event Publisher] Cause : ", e.getCause());
-        log.info("[Outbox Event Publisher] Message : ", e.getMessage());
+        log.info("[Outbox Event Publisher] Publishing Failed --> {}", event.getId());
+
         event.setStatus(OutboxStatus.FAILED);
-        event.setExceptionMessage(e.getCause() == null ? "null" : e.getCause().getMessage() );
+        event.setExceptionMessage(e.getCause() == null ? "unknown" : e.getCause().getMessage());
+        event.increaseRetryCount();
     }
 }
